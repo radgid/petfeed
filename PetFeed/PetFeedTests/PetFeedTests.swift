@@ -12,8 +12,7 @@ import XCTest
 class PetFeedTests: XCTestCase {
 
     var petApi: PetApi!
-    var expectation: XCTestExpectation!
-    let apiURL = URL(string: "https://testSuccess")!
+    let apiURL = URL(string: "https://shibe.online/api/shibes")!
     
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -55,7 +54,7 @@ class PetFeedTests: XCTestCase {
             """#
         let jsonData = jsonString.data(using: .utf8)
         MockUrlProtocol.requestHandler = { request in
-          guard let url = request.url, url == self.apiURL else {
+            guard let url = request.url, url.absoluteString.contains(self.apiURL.absoluteString) else {
             throw PetFailure.invalidRequest
           }
           
@@ -63,15 +62,19 @@ class PetFeedTests: XCTestCase {
           return (response, jsonData)
         }
         //when
+        let exp = XCTestExpectation(description: "Test Fetch")
         let request = PetRequest(count: 4)
         let subscription = petApi.fetch(request).sink(receiveCompletion: { completion in
             if case .failure(let error) = completion {
                 XCTFail("Pet fetch should succeed")
             }
+            exp.fulfill()
         }, receiveValue: { pets in
             XCTAssertFalse(pets.isEmpty)
         })
         XCTAssertNotNil(subscription)
+        
+        wait(for: [exp], timeout: 110.0)
     }
 
     func testPerformanceExample() throws {

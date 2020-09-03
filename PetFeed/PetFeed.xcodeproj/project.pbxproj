@@ -22,6 +22,9 @@
 		4BAB0C7F2500D332002EB709 /* PetFailure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAB0C7E2500D332002EB709 /* PetFailure.swift */; };
 		4BAB0C822500D421002EB709 /* Publisher+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAB0C812500D421002EB709 /* Publisher+Extension.swift */; };
 		4BAB0C842500D4BB002EB709 /* MockUrlProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAB0C832500D4BB002EB709 /* MockUrlProtocol.swift */; };
+		4BAB0C862500DB2F002EB709 /* Encodable+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAB0C852500DB2F002EB709 /* Encodable+Extension.swift */; };
+		4BAB0C882500DDD1002EB709 /* ModelWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAB0C872500DDD1002EB709 /* ModelWrapper.swift */; };
+		4BAB0C8A2500DE4F002EB709 /* OSLog+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAB0C892500DE4F002EB709 /* OSLog+Extension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -63,6 +66,9 @@
 		4BAB0C7E2500D332002EB709 /* PetFailure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PetFailure.swift; sourceTree = "<group>"; };
 		4BAB0C812500D421002EB709 /* Publisher+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Publisher+Extension.swift"; sourceTree = "<group>"; };
 		4BAB0C832500D4BB002EB709 /* MockUrlProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockUrlProtocol.swift; sourceTree = "<group>"; };
+		4BAB0C852500DB2F002EB709 /* Encodable+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Encodable+Extension.swift"; sourceTree = "<group>"; };
+		4BAB0C872500DDD1002EB709 /* ModelWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelWrapper.swift; sourceTree = "<group>"; };
+		4BAB0C892500DE4F002EB709 /* OSLog+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OSLog+Extension.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -177,6 +183,7 @@
 				4BAB0C782500CD93002EB709 /* Pet.swift */,
 				4BAB0C7C2500D288002EB709 /* PetRequest.swift */,
 				4BAB0C7E2500D332002EB709 /* PetFailure.swift */,
+				4BAB0C872500DDD1002EB709 /* ModelWrapper.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -185,6 +192,8 @@
 			isa = PBXGroup;
 			children = (
 				4BAB0C812500D421002EB709 /* Publisher+Extension.swift */,
+				4BAB0C852500DB2F002EB709 /* Encodable+Extension.swift */,
+				4BAB0C892500DE4F002EB709 /* OSLog+Extension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -323,6 +332,9 @@
 				4BAB0C7B2500D242002EB709 /* PetApi.swift in Sources */,
 				4BAB0C7D2500D288002EB709 /* PetRequest.swift in Sources */,
 				4BAB0C792500CD93002EB709 /* Pet.swift in Sources */,
+				4BAB0C882500DDD1002EB709 /* ModelWrapper.swift in Sources */,
+				4BAB0C862500DB2F002EB709 /* Encodable+Extension.swift in Sources */,
+				4BAB0C8A2500DE4F002EB709 /* OSLog+Extension.swift in Sources */,
 				4BAB0C432500C7DB002EB709 /* AppDelegate.swift in Sources */,
 				4BAB0C7F2500D332002EB709 /* PetFailure.swift in Sources */,
 				4BAB0C482500C7DB002EB709 /* PetFeed.xcdatamodeld in Sources */,

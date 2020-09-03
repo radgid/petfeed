@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct PetRequest {
+public struct PetRequest: Encodable {
     public let count: Int
     public let urls: Bool? = true
     public let httpsUrls: Bool? = true

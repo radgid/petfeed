@@ -8,8 +8,16 @@
 
 import Foundation
 import Combine
-public extension Publisher {
 
+public typealias PetPublisher = AnyPublisher<Data, PetFailure>
+extension PetPublisher {
+    public func unwrap<O: Decodable>(with wrapper: ModelWrapper) -> AnyPublisher<O, PetFailure>{
+        return wrapper.unwrap(publisher: self.eraseToAnyPublisher())
+    }
+}
+
+public extension Publisher {
+    
     static func empty() -> AnyPublisher<Output, Failure> {
         return Empty()
             .eraseToAnyPublisher()
