@@ -33,10 +33,10 @@ struct PetRow: View {
                 .shadow(color: Color.gray.opacity(0.5), radius: 14, x: 14, y: 14)
             Spacer()
         }.overlay(Button(action: {
-            
+            Log.user().info(message: "pressed Favourite")
         }, label: { Image(systemName: "heart")
             .font(.body)
-            .padding()})
+            .padding()}).buttonStyle(BorderlessButtonStyle())
             ,alignment: .bottomTrailing)
             .background(Color.gray.opacity(0.1))
             .cornerRadius(8)
@@ -95,7 +95,9 @@ struct PetsView: View {
         VStack{
             List {
                 ForEach(pets) { pet in
-                    PetRow(pet: pet)
+                    PetRow(pet: pet).onTapGesture {
+                        Log.user().info(message: "pressed Dog detail")
+                    }
                 }
             }
         }
