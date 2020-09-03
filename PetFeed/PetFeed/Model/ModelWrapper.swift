@@ -12,18 +12,18 @@ import Combine
 public protocol ModelWrapper {
 
     init()
-    func unwrap<V: Decodable>(publisher: PetPublisher) -> AnyPublisher<V,PetFailure>
+    func unwrap<V: Decodable>(publisher: PetPublisher) -> AnyPublisher<V, PetFailure>
 }
 
 public struct JsonWrapper: ModelWrapper {
 
-    public init(){}
-    public func unwrap<V: Decodable>(publisher: PetPublisher) -> AnyPublisher<V,PetFailure> {
+    public init() {}
+    public func unwrap<V: Decodable>(publisher: PetPublisher) -> AnyPublisher<V, PetFailure> {
         return publisher
             .decode(type: V.self, decoder: JSONDecoder())
-            .mapError{error -> PetFailure in
+            .mapError {error -> PetFailure in
 
-                _ = publisher.sink(receiveCompletion: {_ in}, receiveValue:{ data in
+                _ = publisher.sink(receiveCompletion: {_ in}, receiveValue: { data in
                     let errString = "Unwrap error:\ntype: " +
                         String(describing: V.self) +
                         "\ndetail: " + String(describing: error) +

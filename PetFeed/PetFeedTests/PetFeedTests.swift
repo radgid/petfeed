@@ -9,8 +9,30 @@
 import XCTest
 @testable import PetFeed
 
-class PetFeedTests: XCTestCase {
+struct Resource {
+    let name: String
+    let type: String
+    let url: URL
+    
+    init(name: String, type: String, sourceFile: StaticString = #file) throws {
+        self.name = name
+        self.type = type
+        
+        // The following assumes that your test source files are all in the same directory, and the resources are one directory down and over
+        // <Some folder>
+        //  - Resources
+        //      - <resource files>
+        //  - <Some test source folder>
+        //      - <test case files>
+        let testCaseURL = URL(fileURLWithPath: "\(sourceFile)", isDirectory: false)
+        let testsFolderURL = testCaseURL.deletingLastPathComponent()
+        let resourcesFolderURL = testsFolderURL.deletingLastPathComponent().appendingPathComponent("Resources", isDirectory: true)
+        self.url = resourcesFolderURL.appendingPathComponent("\(name).\(type)", isDirectory: false)
+    }
+}
 
+class PetFeedTests: XCTestCase {
+    
     var petApi: PetApi!
     let apiURL = URL(string: "https://shibe.online/api/shibes")!
     
@@ -20,11 +42,11 @@ class PetFeedTests: XCTestCase {
         configuration.protocolClasses = [MockUrlProtocol.self]
         petApi = PetApi(sessionConfiguration: configuration)
     }
-
+    
     override func tearDownWithError() throws {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
-
+    
     func testPetDecoding() throws {
         //given
         let jsonString = #"""
@@ -34,7 +56,7 @@ class PetFeedTests: XCTestCase {
         //when
         if let jsonData = jsonString.data(using: .utf8) {
             if let petsUrls = try? JSONDecoder().decode([String].self, from: jsonData) {
-                var pets = petsUrls.map{Pet.init($0)}
+                var pets = petsUrls.map {Pet.init($0)}
                 //then
                 XCTAssertFalse(pets.isEmpty ?? true, "Pets Json must be decoded successfully")
             } else {
@@ -55,11 +77,11 @@ class PetFeedTests: XCTestCase {
         let jsonData = jsonString.data(using: .utf8)
         MockUrlProtocol.requestHandler = { request in
             guard let url = request.url, url.absoluteString.contains(self.apiURL.absoluteString) else {
-            throw PetFailure.invalidRequest
-          }
-          
-          let response = HTTPURLResponse(url: self.apiURL, statusCode: 200, httpVersion: nil, headerFields: nil)!
-          return (response, jsonData)
+                throw PetFailure.invalidRequest
+            }
+            
+            let response = HTTPURLResponse(url: self.apiURL, statusCode: 200, httpVersion: nil, headerFields: nil)!
+            return (response, jsonData)
         }
         //when
         let exp = XCTestExpectation(description: "Test Fetch")
@@ -70,18 +92,76 @@ class PetFeedTests: XCTestCase {
             }
             exp.fulfill()
         }, receiveValue: { pets in
+            //then
             XCTAssertFalse(pets.isEmpty)
         })
         XCTAssertNotNil(subscription)
         
         wait(for: [exp], timeout: 110.0)
     }
-
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
+    
+    func testPetFetchError() throws {
+        //given
+        let jsonString = #"""
+            ["https:",,,]
+            """#
+        let jsonData = jsonString.data(using: .utf8)
+        MockUrlProtocol.requestHandler = { request in
+            guard let url = request.url, url.absoluteString.contains(self.apiURL.absoluteString) else {
+                throw PetFailure.invalidRequest
+            }
+            
+            let response = HTTPURLResponse(url: self.apiURL, statusCode: 200, httpVersion: nil, headerFields: nil)!
+            return (response, jsonData)
         }
+        //when
+        let exp = XCTestExpectation(description: "Test Fetch")
+        let request = PetRequest(count: 4)
+        let subscription = petApi.fetch(request).sink(receiveCompletion: { completion in
+            if case .failure(let error) = completion {
+                //then
+                if case PetFailure.unwrapingError(_) = error {
+                } else {
+                    XCTFail("Should report unwrapping error")
+                }
+            }
+            exp.fulfill()
+        }, receiveValue: { _ in
+            XCTFail("Pet fetch should fail and report data error")
+        })
+        XCTAssertNotNil(subscription)
+        
+        wait(for: [exp], timeout: 2.0)
     }
-
+    
+    func testPetDownloadSuccess() throws {
+        //given
+        let file = try? Resource(name: "dog1", type: "jpg")
+        let fileData = (try? Data(contentsOf: file!.url))
+        
+        MockUrlProtocol.requestHandler = { request in
+            guard let url = request.url, url.absoluteString.contains(self.apiURL.absoluteString) else {
+                throw PetFailure.invalidRequest
+            }
+            
+            let response = HTTPURLResponse(url: self.apiURL, statusCode: 200, httpVersion: nil, headerFields: nil)!
+            return (response, fileData)
+        }
+        //when
+        let exp = XCTestExpectation(description: "Test Download")
+        let subscription = petApi.download(self.apiURL)
+            .sink(receiveCompletion: { completion in
+                if case .failure(_) = completion {
+                    XCTFail("Pet image download should succeed")
+                }
+                exp.fulfill()
+            }, receiveValue: { image in
+                //then
+                XCTAssertFalse(image.isEmpty)
+            })
+        XCTAssertNotNil(subscription)
+        
+        wait(for: [exp], timeout: 110.0)
+    }
+    
 }

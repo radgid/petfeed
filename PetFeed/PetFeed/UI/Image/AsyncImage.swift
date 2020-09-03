@@ -1,0 +1,41 @@
+//
+//  AsyncImage.swift
+//  PetFeed
+//
+//  Created by Danko, Radoslav on 03/09/2020.
+//  Copyright © 2020 Danko, Radoslav. All rights reserved.
+//
+
+import Foundation
+import SwiftUI
+
+/// Asynchronous Image loading
+public struct AsyncImage<Placeholder: View>: View {
+    @ObservedObject private var loader: ImageLoader
+    private let placeholder: Placeholder?
+    
+    public init(url: URL?, placeholder: Placeholder? = nil,
+                cache: ImageCache? = nil,
+                service: PetApiProtocol = PetApi()) {
+        loader = ImageLoader(url: url, cache: cache, service: service)
+        self.placeholder = placeholder
+    }
+
+    public var body: some View {
+        image
+            .onAppear(perform: loader.load)
+            .onDisappear(perform: loader.cancel)
+    }
+    
+    private var image: some View {
+        Group {
+            if loader.image != nil {
+                Image(uiImage: loader.image!)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+            } else {
+                placeholder
+            }
+        }
+    }
+}

@@ -11,7 +11,7 @@ import Foundation
 public struct Pet: Identifiable, Codable {
     public let id: String = UUID().uuidString
     public let url: String
-    
+
     public init(_ url: String) {
         self.url = url
     }

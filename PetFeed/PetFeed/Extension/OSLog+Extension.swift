@@ -27,12 +27,12 @@ public enum Log {
 
 extension Log {
     public func info(message: String) {
-        os_log("%{public}s", log: self.associatedValue() , type: .info,  message)
+        os_log("%{public}s", log: self.associatedValue(), type: .info, message)
     }
     public func error(message: String) {
-        os_log("%{public}s", log: self.associatedValue() , type: .error,  message)
+        os_log("%{public}s", log: self.associatedValue(), type: .error, message)
     }
     public func fault(message: String) {
-        os_log("%{public}s", log: self.associatedValue() , type: .fault,  message)
+        os_log("%{public}s", log: self.associatedValue(), type: .fault, message)
     }
 }

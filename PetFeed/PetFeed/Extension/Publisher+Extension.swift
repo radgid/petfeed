@@ -11,13 +11,13 @@ import Combine
 
 public typealias PetPublisher = AnyPublisher<Data, PetFailure>
 extension PetPublisher {
-    public func unwrap<O: Decodable>(with wrapper: ModelWrapper) -> AnyPublisher<O, PetFailure>{
+    public func unwrap<O: Decodable>(with wrapper: ModelWrapper) -> AnyPublisher<O, PetFailure> {
         return wrapper.unwrap(publisher: self.eraseToAnyPublisher())
     }
 }
 
 public extension Publisher {
-    
+
     static func empty() -> AnyPublisher<Output, Failure> {
         return Empty()
             .eraseToAnyPublisher()
@@ -29,7 +29,7 @@ public extension Publisher {
     }
 
     static func future(_ output: Output, failure: Failure? = nil) -> AnyPublisher<Output, Failure> {
-        return Future<Output, Failure>.init{ promise in
+        return Future<Output, Failure>.init { promise in
             return promise(.success(output))
         }.eraseToAnyPublisher()
     }
