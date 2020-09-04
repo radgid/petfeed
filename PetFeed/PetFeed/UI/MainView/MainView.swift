@@ -13,6 +13,7 @@ import Combine
 /// Main View
 struct MainView: View {
     @EnvironmentObject var store: AppStore
+    @Environment(\.managedObjectContext) var managedObjectContext
     @State private var selection = 0
     @Environment(\.imageCache) var cache: ImageCache
     @State private var imageIsPresented: Bool = false
@@ -53,71 +54,6 @@ struct MainView: View {
         store.send(.fetch(page:1))
     }
 }
-
-//MARK: - Subviews
-/// Row with Pet for display
-struct PetRow: View {
-    let pet: Pet
-    @Environment(\.imageCache) var cache: ImageCache
-    @EnvironmentObject var store: AppStore
-    
-    init(pet: Pet) {
-        self.pet = pet
-    }
-    
-    var body: some View {
-        HStack(alignment: .center) {
-            Spacer()
-            AsyncImage(url: URL(string: pet.url),
-                       placeholder: Image(systemName: "hourglass").font(.title),
-                       cache: self.cache,
-                service: store.environment.service)
-                .frame(height: 180)
-                .padding()
-                .shadow(color: Color.white.opacity(0.9), radius: 10, x: -10, y: -10)
-                .shadow(color: Color.gray.opacity(0.5), radius: 14, x: 14, y: 14)
-            Spacer()
-        }.overlay(Button(action: {
-            Log.user().info(message: "pressed Favourite")
-        }, label: { Image(systemName: "heart.fill")
-            .font(.body)
-            .padding()}).buttonStyle(BorderlessButtonStyle())
-            ,alignment: .bottomTrailing)
-            .background(Color.gray.opacity(0.1))
-            .cornerRadius(8)
-    }
-}
-struct PetsView: View {
-    @Environment(\.imageCache) var cache: ImageCache
-    let pets: [Pet]
-    @State private var isPresented: Bool = false
-    @State private var selection: Pet?
-    
-    var body: some View {
-        VStack{
-            List {
-                ForEach(Array(pets.enumerated()), id: \.element) { idx, pet in
-                    VStack {
-                        PetRow(pet: pet).onTapGesture {
-                            Log.user().info(message: "pressed Dog detail")
-                            self.selection = pet
-                            self.isPresented.toggle()
-                            
-                            }
-                        .sheet(isPresented: self.$isPresented) {
-                            if self.selection != nil {
-                                PetImageView(petImage: self.selection!.image(from: self.cache), pet: self.selection!)
-                            } else {
-                                EmptyView()
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
 
 //MARK: - Preview
 struct ContentView_Previews: PreviewProvider {

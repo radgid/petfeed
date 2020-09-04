@@ -16,7 +16,7 @@ import SwiftUI
     
     init(url: URL?, placeholder: Placeholder? = nil,
                 cache: ImageCache? = nil,
-                service: PetRepository = PetApi()) {
+                service: PetRepository) {
         loader = ImageLoader(url: url, cache: cache, service: service)
         self.placeholder = placeholder
     }

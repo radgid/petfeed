@@ -21,7 +21,7 @@ class ImageLoader: ObservableObject {
     
     private(set) var isLoading = false
     private var cancellable: AnyCancellable?
-    init(url: URL?, cache: ImageCache? = nil, service: PetRepository = PetApi()) {
+    init(url: URL?, cache: ImageCache? = nil, service: PetRepository) {
         guard let url = url else {
             return
         }

@@ -8,21 +8,32 @@
 
 import Foundation
 import Combine
+import CoreData
 
 protocol PetRepository {
     func fetch(_ request: PetRequest) -> AnyPublisher<[Pet], PetFailure>
     func download(_ imageUrl: URL) -> AnyPublisher<Data, PetFailure>
+    func fetchFavourites(page: Int) -> AnyPublisher<[Pet], PetFailure>
 }
 
 /// Pet API
 struct PetApi: PetRepository {
-
     private let sessionConfiguration: URLSessionConfiguration
+    private let managedObjectContext: NSManagedObjectContext
     private let host: String = "https://shibe.online/api/shibes"
-    init(sessionConfiguration: URLSessionConfiguration = .default) {
+    init(sessionConfiguration: URLSessionConfiguration = .default,
+         managedObjectContext: NSManagedObjectContext) {
         self.sessionConfiguration = sessionConfiguration
+        self.managedObjectContext = managedObjectContext
     }
-
+    
+    /// Fetch stored - favourite - Pet Images
+    /// - Parameter page: Paging
+    /// - Returns: Favourite Publisher
+    func fetchFavourites(page: Int = -1) -> AnyPublisher<[Pet], PetFailure> {
+        return .fail(.invalidRequest)
+    }
+    
     /// Fetches Pets information
     /// - Parameter request: Request details for fetching pets
     /// - Returns: Pets details publisher

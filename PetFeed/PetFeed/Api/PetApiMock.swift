@@ -27,6 +27,11 @@ struct PetApiMock: PetRepository {
         return .fail(.invalidRequest)
     }
     
+    func fetchFavourites(page: Int) -> AnyPublisher<[Pet], PetFailure> {
+        let pets = ["https://dog1.jpg", "https://dog2.jpg", "https://dog3.jpg"].map{Pet.init($0)}
+        return .future(pets)
+    }
+
     func petImage() -> Image {
         if let path = Bundle.main.path(forResource: "dog1", ofType: "jpg") {
             if let data = try? Data(contentsOf: URL(fileURLWithPath: path)) {

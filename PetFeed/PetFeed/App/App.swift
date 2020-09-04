@@ -16,9 +16,9 @@ struct Constants {
 
 /// Settings used throughout the App
 struct Settings {
-    static let store = Store(initialState: .init(),
-                             reducer: appReducer,
-                             environment: PetEnvironment(service: PetApi()))
+//    static let store = Store(initialState: .init(),
+//                             reducer: appReducer,
+//                             environment: PetEnvironment(service: PetApi()))
     static let storeMock = Store(initialState: .init(),
                                 reducer: appReducer,
                                 environment: PetEnvironment(service: PetApiMock()))
@@ -36,6 +36,7 @@ struct AppState {
 /// App Actions
 enum AppAction {
     case fetch(page: Int)
+    case fetchFavourite(page: Int)
     case setFetchResult(pets: [Pet])
     case setPet(_ pet: Pet, favourite: Bool)
 }
@@ -54,6 +55,8 @@ func appReducer(state: inout AppState,
             .replaceError(with: [])
             .map{AppAction.setFetchResult(pets: $0)}
             .eraseToAnyPublisher()
+    case let .fetchFavourite(page):
+        break
     case let .setPet(pet, favourite):
         break
     }

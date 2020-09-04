@@ -7,6 +7,7 @@
 //
 
 import XCTest
+import CoreData
 @testable import PetFeed
 
 struct Resource {
@@ -31,16 +32,35 @@ struct Resource {
     }
 }
 
+extension NSManagedObjectContext {
+    
+    class func contextForTests() -> NSManagedObjectContext {
+        // Get the model
+        let model = NSManagedObjectModel.mergedModel(from: Bundle.allBundles)!
+        
+        // Create and configure the coordinator
+        let coordinator = NSPersistentStoreCoordinator(managedObjectModel: model)
+        try! coordinator.addPersistentStore(ofType: NSInMemoryStoreType, configurationName: nil, at: nil, options: nil)
+        
+        // Setup the context
+        let context = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+        context.persistentStoreCoordinator = coordinator
+        return context
+    }
+    
+}
+
 class PetFeedTests: XCTestCase {
     
     var petApi: PetApi!
     let apiURL = URL(string: "https://shibe.online/api/shibes")!
+    let context =  NSManagedObjectContext.contextForTests()
     
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
         let configuration = URLSessionConfiguration.default
         configuration.protocolClasses = [MockUrlProtocol.self]
-        petApi = PetApi(sessionConfiguration: configuration)
+        petApi = PetApi(sessionConfiguration: configuration, managedObjectContext: context)
     }
     
     override func tearDownWithError() throws {
@@ -129,6 +149,26 @@ class PetFeedTests: XCTestCase {
         }, receiveValue: { _ in
             XCTFail("Pet fetch should fail and report data error")
         })
+        XCTAssertNotNil(subscription)
+        
+        wait(for: [exp], timeout: 2.0)
+    }
+    
+    func testFetchLocal() throws {
+        //given
+        //when
+        let exp = XCTestExpectation(description: "Test Fetch Local")
+        let subscription = petApi.fetchFavourites()
+            .sink(receiveCompletion: { completion in
+                if case .failure(let error) = completion {
+                    //then
+                    XCTFail("Should return Local Pets")
+                }
+                exp.fulfill()
+            }, receiveValue: { _ in
+                XCTFail("Pet fetch should return Local Pets")
+            })
+        
         XCTAssertNotNil(subscription)
         
         wait(for: [exp], timeout: 2.0)
