@@ -16,12 +16,12 @@ struct Constants {
 
 /// Settings used throughout the App
 struct Settings {
-//    static let store = Store(initialState: .init(),
-//                             reducer: appReducer,
-//                             environment: PetEnvironment(service: PetApi()))
+    //    static let store = Store(initialState: .init(),
+    //                             reducer: appReducer,
+    //                             environment: PetEnvironment(service: PetApi()))
     static let storeMock = Store(initialState: .init(),
-                                reducer: appReducer,
-                                environment: PetEnvironment(service: PetApiMock()))
+                                 reducer: appReducer,
+                                 environment: PetEnvironment(service: PetApiMock()))
 }
 
 struct PetEnvironment {
@@ -31,6 +31,7 @@ struct PetEnvironment {
 /// Global AppState
 struct AppState {
     var fetchResult: [Pet] = []
+    var fetchFavouriteResult: [DisplayablePet] = []
 }
 
 /// App Actions
@@ -38,6 +39,7 @@ enum AppAction {
     case fetch(page: Int)
     case fetchFavourite(page: Int)
     case setFetchResult(pets: [Pet])
+    case setFetchFavouriteResult(pets: [DisplayablePet])
     case setPet(_ pet: Pet, favourite: Bool)
 }
 
@@ -48,6 +50,8 @@ func appReducer(state: inout AppState,
     switch action {
     case let .setFetchResult(pets):
         state.fetchResult = pets
+    case let .setFetchFavouriteResult(pets):
+        state.fetchFavouriteResult = pets
     case let .fetch(page):
         let request = PetRequest(count: Constants.pageSize * page)
         return environment.service
@@ -56,7 +60,11 @@ func appReducer(state: inout AppState,
             .map{AppAction.setFetchResult(pets: $0)}
             .eraseToAnyPublisher()
     case let .fetchFavourite(page):
-        break
+        return environment.service
+            .fetchFavourites(page: page)
+            .replaceError(with: [])
+            .map{AppAction.setFetchFavouriteResult(pets: $0)}
+            .eraseToAnyPublisher()
     case let .setPet(pet, favourite):
         break
     }

@@ -9,6 +9,12 @@
 import Foundation
 import SwiftUI
 
-struct DisplayablePet {
+struct DisplayablePet: Identifiable {
+    let id: String
     let image: Image
+    
+    init(id: String, image: Image) {
+        self.id = id
+        self.image = image
+    }
 }

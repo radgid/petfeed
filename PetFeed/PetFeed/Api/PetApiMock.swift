@@ -27,15 +27,15 @@ struct PetApiMock: PetRepository {
         return .fail(.invalidRequest)
     }
     
-    func fetchFavourites(page: Int) -> AnyPublisher<[Pet], PetFailure> {
-        let pets = ["https://dog1.jpg", "https://dog2.jpg", "https://dog3.jpg"].map{Pet.init($0)}
+    func fetchFavourites(page: Int) -> AnyPublisher<[DisplayablePet], PetFailure> {
+        let pets = ["https://dog1.jpg", "https://dog2.jpg", "https://dog3.jpg"].map{DisplayablePet.init(id: $0, image: petImage())}
         return .future(pets)
     }
 
     func petImage() -> Image {
         if let path = Bundle.main.path(forResource: "dog1", ofType: "jpg") {
             if let data = try? Data(contentsOf: URL(fileURLWithPath: path)) {
-                return Image(uiImage: UIImage(data: data)!)
+                return data.asImage()!
             }
         }
         return Image(systemName: "hourglass")

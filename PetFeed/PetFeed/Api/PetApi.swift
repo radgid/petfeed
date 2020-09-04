@@ -13,7 +13,7 @@ import CoreData
 protocol PetRepository {
     func fetch(_ request: PetRequest) -> AnyPublisher<[Pet], PetFailure>
     func download(_ imageUrl: URL) -> AnyPublisher<Data, PetFailure>
-    func fetchFavourites(page: Int) -> AnyPublisher<[Pet], PetFailure>
+    func fetchFavourites(page: Int) -> AnyPublisher<[DisplayablePet], PetFailure>
 }
 
 /// Pet API
@@ -30,7 +30,27 @@ struct PetApi: PetRepository {
     /// Fetch stored - favourite - Pet Images
     /// - Parameter page: Paging
     /// - Returns: Favourite Publisher
-    func fetchFavourites(page: Int = -1) -> AnyPublisher<[Pet], PetFailure> {
+    func fetchFavourites(page: Int = -1) -> AnyPublisher<[DisplayablePet], PetFailure> {
+        let fetchRequest =
+            NSFetchRequest<NSManagedObject>(entityName: "FavouritePet")
+        do {
+            if let petsMO = try managedObjectContext.fetch(fetchRequest) as? [FavouritePet] {
+                let pets = petsMO.compactMap { (pet) -> DisplayablePet? in
+                    let id = pet.url ?? ""
+                    if let imageData = pet.value(forKeyPath: "image") as? Data {
+                        if let image = imageData.asImage() {
+                            return DisplayablePet(id: id, image: image)
+                        }
+                    }
+                    return nil
+                }
+                return .future(pets)
+            }
+            return .future([])
+        } catch let error as NSError {
+            Log.data().error(message: "Could not fetch. \(error), \(error.userInfo)")
+            return .fail(.databaseError(error: error))
+        }
         return .fail(.invalidRequest)
     }
     
@@ -39,24 +59,24 @@ struct PetApi: PetRepository {
     /// - Returns: Pets details publisher
     func fetch(_ request: PetRequest) -> AnyPublisher<[Pet], PetFailure> {
         guard let urlQuery = request.urlQueryString(),
-              let url = URL(string: host + "?" + urlQuery) else {
-            return .fail(.invalidRequest)
+            let url = URL(string: host + "?" + urlQuery) else {
+                return .fail(.invalidRequest)
         }
-
+        
         let session = URLSession(configuration: sessionConfiguration)
         let urlRequest = URLRequest(url: url)
         let publisher = session.petPublisher(for: urlRequest)
-
+        
         //Unwrap Array of Strings from the Json
         let result: AnyPublisher<[String], PetFailure> = publisher.unwrap(with: JsonWrapper())
             .eraseToAnyPublisher()
-
+        
         //Transform Array of string into Pet structures
         let transformed: AnyPublisher<[Pet], PetFailure> = result.flatMap { (urls) ->  AnyPublisher<[Pet], PetFailure> in
             let pets = urls.map {Pet.init($0)}
             return .future(pets)
         }.eraseToAnyPublisher()
-
+        
         return transformed
     }
     
@@ -67,7 +87,7 @@ struct PetApi: PetRepository {
         let session = URLSession(configuration: sessionConfiguration)
         let urlRequest = URLRequest(url: imageUrl)
         let publisher = session.petPublisher(for: urlRequest)
-
+        
         return publisher
     }
 }

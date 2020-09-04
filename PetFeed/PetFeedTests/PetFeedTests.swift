@@ -165,8 +165,8 @@ class PetFeedTests: XCTestCase {
                     XCTFail("Should return Local Pets")
                 }
                 exp.fulfill()
-            }, receiveValue: { _ in
-                XCTFail("Pet fetch should return Local Pets")
+            }, receiveValue: { pets in
+                XCTAssertFalse(pets.isEmpty,"Pet fetch should return Local Pets")
             })
         
         XCTAssertNotNil(subscription)

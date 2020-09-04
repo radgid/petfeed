@@ -29,7 +29,9 @@ struct MainView: View {
                     }
             }
             .tag(0)
-            Text("Favourites")
+            Text("Favourites").onAppear {
+                self.fetchFavourite()
+            }
                 .font(.title)
                 .tabItem {
                     VStack {
@@ -52,6 +54,9 @@ struct MainView: View {
     //MARK: - Actions
     private func fetch() {
         store.send(.fetch(page:1))
+    }
+    private func fetchFavourite() {
+        store.send(.fetchFavourite(page:1))
     }
 }
 

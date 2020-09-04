@@ -14,4 +14,5 @@ public enum PetFailure: Error {
     case serverError(statusCode: Int, reason: String? = nil)
     case sslError
     case unwrapingError(error: Error)
+    case databaseError(error: Error)
 }
