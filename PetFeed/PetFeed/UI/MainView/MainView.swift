@@ -10,6 +10,51 @@ import SwiftUI
 import Combine
 
 
+/// Main View
+struct MainView: View {
+    @EnvironmentObject var store: AppStore
+    @State private var selection = 0
+    @Environment(\.imageCache) var cache: ImageCache
+    @State private var imageIsPresented: Bool = false
+    
+    //MARK: - Subviews
+    var tabView: some View {
+        TabView(selection: $selection) {
+            PetsView(pets: store.state.fetchResult)
+                .tabItem {
+                    VStack {
+                        Image(systemName: "list.dash")
+                        Text("All Posts")
+                    }
+            }
+            .tag(0)
+            Text("Favourites")
+                .font(.title)
+                .tabItem {
+                    VStack {
+                        Image(systemName: "heart.fill")
+                        Text("Favourites")
+                    }
+            }
+            .tag(1)
+        }
+    }
+    
+    // MARK: - Body
+    var body: some View {
+        tabView.onAppear {
+            self.fetch()
+            UITableView.appearance().separatorStyle = .none
+        }
+    }
+    
+    //MARK: - Actions
+    private func fetch() {
+        store.send(.fetch(page:1))
+    }
+}
+
+//MARK: - Subviews
 /// Row with Pet for display
 struct PetRow: View {
     let pet: Pet
@@ -26,7 +71,7 @@ struct PetRow: View {
             AsyncImage(url: URL(string: pet.url),
                        placeholder: Image(systemName: "hourglass").font(.title),
                        cache: self.cache,
-                       service: store.environment.service)
+                service: store.environment.service)
                 .frame(height: 180)
                 .padding()
                 .shadow(color: Color.white.opacity(0.9), radius: 10, x: -10, y: -10)
@@ -34,7 +79,7 @@ struct PetRow: View {
             Spacer()
         }.overlay(Button(action: {
             Log.user().info(message: "pressed Favourite")
-        }, label: { Image(systemName: "heart")
+        }, label: { Image(systemName: "heart.fill")
             .font(.body)
             .padding()}).buttonStyle(BorderlessButtonStyle())
             ,alignment: .bottomTrailing)
@@ -42,61 +87,30 @@ struct PetRow: View {
             .cornerRadius(8)
     }
 }
-
-/// Main View
-struct MainView: View {
-    @EnvironmentObject var store: AppStore
-    @State private var selection = 0
-    @Environment(\.imageCache) var cache: ImageCache
-    
-    /// Tabs definition
-    var tabView: some View {
-        TabView(selection: $selection) {
-            PetsView(pets: store.state.fetchResult)
-                .tabItem {
-                    VStack {
-                        Image(systemName: "list.dash")
-                        Text("All Posts")
-                    }
-            }
-            .tag(0)
-            Text("Favourites")
-                .font(.title)
-                .tabItem {
-                    VStack {
-                        Image(systemName: "heart")
-                        Text("Favourites")
-                    }
-            }
-            .tag(1)
-        }
-    }
-    
-    // MARK: - Body -
-    /// Main View definition
-    var body: some View {
-        tabView.onAppear {
-            self.fetch()
-            UITableView.appearance().separatorStyle = .none
-        }
-    }
-    
-    //MARK: Actions
-    private func fetch() {
-        store.send(.fetch(page:1))
-    }
-}
-
-/// Pets Subview
 struct PetsView: View {
+    @Environment(\.imageCache) var cache: ImageCache
     let pets: [Pet]
+    @State private var isPresented: Bool = false
+    @State private var selection: Pet?
     
     var body: some View {
         VStack{
             List {
-                ForEach(pets) { pet in
-                    PetRow(pet: pet).onTapGesture {
-                        Log.user().info(message: "pressed Dog detail")
+                ForEach(Array(pets.enumerated()), id: \.element) { idx, pet in
+                    VStack {
+                        PetRow(pet: pet).onTapGesture {
+                            Log.user().info(message: "pressed Dog detail")
+                            self.selection = pet
+                            self.isPresented.toggle()
+                            
+                            }
+                        .sheet(isPresented: self.$isPresented) {
+                            if self.selection != nil {
+                                PetImageView(petImage: self.selection!.image(from: self.cache), pet: self.selection!)
+                            } else {
+                                EmptyView()
+                            }
+                        }
                     }
                 }
             }
@@ -105,6 +119,7 @@ struct PetsView: View {
 }
 
 
+//MARK: - Preview
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         MainView().environmentObject(Settings.storeMock)

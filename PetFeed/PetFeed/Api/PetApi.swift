@@ -9,24 +9,24 @@
 import Foundation
 import Combine
 
-public protocol PetApiProtocol {
+protocol PetRepository {
     func fetch(_ request: PetRequest) -> AnyPublisher<[Pet], PetFailure>
     func download(_ imageUrl: URL) -> AnyPublisher<Data, PetFailure>
 }
 
 /// Pet API
-public struct PetApi: PetApiProtocol {
+struct PetApi: PetRepository {
 
-    public let sessionConfiguration: URLSessionConfiguration
+    private let sessionConfiguration: URLSessionConfiguration
     private let host: String = "https://shibe.online/api/shibes"
-    public init(sessionConfiguration: URLSessionConfiguration = .default) {
+    init(sessionConfiguration: URLSessionConfiguration = .default) {
         self.sessionConfiguration = sessionConfiguration
     }
 
     /// Fetches Pets information
     /// - Parameter request: Request details for fetching pets
     /// - Returns: Pets details publisher
-    public func fetch(_ request: PetRequest) -> AnyPublisher<[Pet], PetFailure> {
+    func fetch(_ request: PetRequest) -> AnyPublisher<[Pet], PetFailure> {
         guard let urlQuery = request.urlQueryString(),
               let url = URL(string: host + "?" + urlQuery) else {
             return .fail(.invalidRequest)
@@ -34,21 +34,7 @@ public struct PetApi: PetApiProtocol {
 
         let session = URLSession(configuration: sessionConfiguration)
         let urlRequest = URLRequest(url: url)
-        let publisher = session.dataTaskPublisher(for: urlRequest)
-            .tryMap({ (data: Data, response: URLResponse) -> Data in
-                guard let urlResponse = response as? HTTPURLResponse, urlResponse.statusCode == 200 else {
-                    throw PetFailure.serverError(statusCode: (response as? HTTPURLResponse)?.statusCode ?? Int(-1) )
-                }
-                return data
-            })
-            .mapError { error -> PetFailure in
-                let nsError = error as NSError
-
-                if nsError.code == -1200 {
-                    return .sslError
-                }
-                return .reason(error: error)
-        }.eraseToAnyPublisher()
+        let publisher = session.petPublisher(for: urlRequest)
 
         //Unwrap Array of Strings from the Json
         let result: AnyPublisher<[String], PetFailure> = publisher.unwrap(with: JsonWrapper())
@@ -69,21 +55,7 @@ public struct PetApi: PetApiProtocol {
     public func download(_ imageUrl: URL) -> AnyPublisher<Data, PetFailure> {
         let session = URLSession(configuration: sessionConfiguration)
         let urlRequest = URLRequest(url: imageUrl)
-        let publisher = session.dataTaskPublisher(for: urlRequest)
-            .tryMap({ (data: Data, response: URLResponse) -> Data in
-                guard let urlResponse = response as? HTTPURLResponse, urlResponse.statusCode == 200 else {
-                    throw PetFailure.serverError(statusCode: (response as? HTTPURLResponse)?.statusCode ?? Int(-1) )
-                }
-                return data
-            })
-            .mapError { error -> PetFailure in
-                let nsError = error as NSError
-
-                if nsError.code == -1200 {
-                    return .sslError
-                }
-                return .reason(error: error)
-        }.eraseToAnyPublisher()
+        let publisher = session.petPublisher(for: urlRequest)
 
         return publisher
     }

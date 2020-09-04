@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4B2E9C9925021D5F00DF2B31 /* PetImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2E9C9825021D5F00DF2B31 /* PetImageView.swift */; };
+		4B63ABF4250250CF00D2CF6E /* Pet+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B63ABF3250250CF00D2CF6E /* Pet+Extension.swift */; };
+		4B87AA1325021B44006D3212 /* URLSession+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B87AA1225021B44006D3212 /* URLSession+Extension.swift */; };
 		4BAB0C432500C7DB002EB709 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAB0C422500C7DB002EB709 /* AppDelegate.swift */; };
 		4BAB0C452500C7DB002EB709 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAB0C442500C7DB002EB709 /* SceneDelegate.swift */; };
 		4BAB0C482500C7DB002EB709 /* PetFeed.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4BAB0C462500C7DB002EB709 /* PetFeed.xcdatamodeld */; };
@@ -56,6 +59,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4B2E9C9825021D5F00DF2B31 /* PetImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PetImageView.swift; sourceTree = "<group>"; };
+		4B63ABF3250250CF00D2CF6E /* Pet+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Pet+Extension.swift"; sourceTree = "<group>"; };
+		4B87AA1225021B44006D3212 /* URLSession+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLSession+Extension.swift"; sourceTree = "<group>"; };
 		4BAB0C3F2500C7DB002EB709 /* PetFeed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PetFeed.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4BAB0C422500C7DB002EB709 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4BAB0C442500C7DB002EB709 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -141,10 +147,10 @@
 		4BAB0C412500C7DB002EB709 /* PetFeed */ = {
 			isa = PBXGroup;
 			children = (
-				4BAB0C96250104C3002EB709 /* Flow */,
-				4BAB0C802500D414002EB709 /* Extension */,
+				4BAB0C96250104C3002EB709 /* App */,
 				4BAB0C772500CD7E002EB709 /* Model */,
 				4BAB0C762500CC0A002EB709 /* Api */,
+				4BAB0C802500D414002EB709 /* Extension */,
 				4BAB0C752500CAFC002EB709 /* UI */,
 				4BAB0C422500C7DB002EB709 /* AppDelegate.swift */,
 				4BAB0C442500C7DB002EB709 /* SceneDelegate.swift */,
@@ -221,6 +227,7 @@
 				4BAB0C852500DB2F002EB709 /* Encodable+Extension.swift */,
 				4BAB0C892500DE4F002EB709 /* OSLog+Extension.swift */,
 				4BAB0CA4250114E7002EB709 /* Environment+Extension.swift */,
+				4B87AA1225021B44006D3212 /* URLSession+Extension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -233,13 +240,13 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
-		4BAB0C96250104C3002EB709 /* Flow */ = {
+		4BAB0C96250104C3002EB709 /* App */ = {
 			isa = PBXGroup;
 			children = (
 				4BAB0C9225010357002EB709 /* App.swift */,
 				4BAB0C97250104D6002EB709 /* Store.swift */,
 			);
-			path = Flow;
+			path = App;
 			sourceTree = "<group>";
 		};
 		4BAB0C9F25010CF3002EB709 /* Image */ = {
@@ -248,6 +255,7 @@
 				4BAB0CA225010EF8002EB709 /* AsyncImage.swift */,
 				4BAB0C9D25010CEB002EB709 /* ImageCache.swift */,
 				4BAB0CA025010D88002EB709 /* ImageLoader.swift */,
+				4B63ABF3250250CF00D2CF6E /* Pet+Extension.swift */,
 			);
 			path = Image;
 			sourceTree = "<group>";
@@ -257,6 +265,7 @@
 			children = (
 				4BAB0C492500C7DB002EB709 /* MainView.swift */,
 				4BAB0CA7250116E5002EB709 /* MainViewModel.swift */,
+				4B2E9C9825021D5F00DF2B31 /* PetImageView.swift */,
 			);
 			path = MainView;
 			sourceTree = "<group>";
@@ -398,7 +407,10 @@
 				4BAB0C7B2500D242002EB709 /* PetApi.swift in Sources */,
 				4BAB0C9E25010CEB002EB709 /* ImageCache.swift in Sources */,
 				4BAB0C7D2500D288002EB709 /* PetRequest.swift in Sources */,
+				4B63ABF4250250CF00D2CF6E /* Pet+Extension.swift in Sources */,
+				4B2E9C9925021D5F00DF2B31 /* PetImageView.swift in Sources */,
 				4BAB0CA5250114E7002EB709 /* Environment+Extension.swift in Sources */,
+				4B87AA1325021B44006D3212 /* URLSession+Extension.swift in Sources */,
 				4BAB0C792500CD93002EB709 /* Pet.swift in Sources */,
 				4BAB0C9C2501082F002EB709 /* Store.swift in Sources */,
 				4BAB0C882500DDD1002EB709 /* ModelWrapper.swift in Sources */,

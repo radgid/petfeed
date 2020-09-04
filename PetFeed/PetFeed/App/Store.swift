@@ -19,7 +19,7 @@ final class Store<State, Action, PetEnvironment>: ObservableObject {
     private let reducer: Reducer<State, Action, PetEnvironment>
     private var cancellables: Set<AnyCancellable> = []
 
-    init(
+    public init(
         initialState: State,
         reducer: @escaping Reducer<State, Action, PetEnvironment>,
         environment: PetEnvironment
@@ -29,7 +29,7 @@ final class Store<State, Action, PetEnvironment>: ObservableObject {
         self.environment = environment
     }
 
-    func send(_ action: Action) {
+    public func send(_ action: Action) {
         guard let effect = reducer(&state, action, environment) else {
             return
         }

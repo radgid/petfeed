@@ -56,9 +56,9 @@ class PetFeedTests: XCTestCase {
         //when
         if let jsonData = jsonString.data(using: .utf8) {
             if let petsUrls = try? JSONDecoder().decode([String].self, from: jsonData) {
-                var pets = petsUrls.map {Pet.init($0)}
+                let pets = petsUrls.map {Pet.init($0)}
                 //then
-                XCTAssertFalse(pets.isEmpty ?? true, "Pets Json must be decoded successfully")
+                XCTAssertFalse(pets.isEmpty, "Pets Json must be decoded successfully")
             } else {
                 XCTFail("Pets Json must be parsed successfully")
             }
@@ -87,7 +87,7 @@ class PetFeedTests: XCTestCase {
         let exp = XCTestExpectation(description: "Test Fetch")
         let request = PetRequest(count: 4)
         let subscription = petApi.fetch(request).sink(receiveCompletion: { completion in
-            if case .failure(let error) = completion {
+            if case .failure(_) = completion {
                 XCTFail("Pet fetch should succeed")
             }
             exp.fulfill()

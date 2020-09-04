@@ -9,15 +9,16 @@
 import Foundation
 import Combine
 import UIKit
+import SwiftUI
 
 /// Pet API Mock
-public struct PetApiMock: PetApiProtocol {
-    public func fetch(_ request: PetRequest) -> AnyPublisher<[Pet], PetFailure> {
+struct PetApiMock: PetRepository {
+    func fetch(_ request: PetRequest) -> AnyPublisher<[Pet], PetFailure> {
         let pets = ["https://dog1.jpg", "https://dog2.jpg", "https://dog3.jpg"].map{Pet.init($0)}
         return .future(pets)
     }
     
-    public func download(_ imageUrl: URL) -> AnyPublisher<Data, PetFailure> {
+    func download(_ imageUrl: URL) -> AnyPublisher<Data, PetFailure> {
         if let path = Bundle.main.path(forResource: "dog1", ofType: "jpg") {
             if let data = try? Data(contentsOf: URL(fileURLWithPath: path)) {
                 return .future(data)
@@ -26,4 +27,12 @@ public struct PetApiMock: PetApiProtocol {
         return .fail(.invalidRequest)
     }
     
+    func petImage() -> Image {
+        if let path = Bundle.main.path(forResource: "dog1", ofType: "jpg") {
+            if let data = try? Data(contentsOf: URL(fileURLWithPath: path)) {
+                return Image(uiImage: UIImage(data: data)!)
+            }
+        }
+        return Image(systemName: "hourglass")
+    }
 }

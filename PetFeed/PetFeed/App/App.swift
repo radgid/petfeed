@@ -25,7 +25,7 @@ struct Settings {
 }
 
 struct PetEnvironment {
-    let service: PetApiProtocol
+    let service: PetRepository
 }
 
 /// Global AppState
@@ -37,6 +37,7 @@ struct AppState {
 enum AppAction {
     case fetch(page: Int)
     case setFetchResult(pets: [Pet])
+    case setPet(_ pet: Pet, favourite: Bool)
 }
 
 /// Reducer to get the next action from the current state and current action
@@ -53,7 +54,11 @@ func appReducer(state: inout AppState,
             .replaceError(with: [])
             .map{AppAction.setFetchResult(pets: $0)}
             .eraseToAnyPublisher()
+    case let .setPet(pet, favourite):
+        break
     }
+    
+    
     return Empty().eraseToAnyPublisher()
 }
 
