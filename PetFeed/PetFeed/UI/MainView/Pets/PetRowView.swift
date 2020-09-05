@@ -35,7 +35,7 @@ struct PetRow: View {
                 .shadow(color: Color.gray.opacity(0.5), radius: 14, x: 14, y: 14)
             Spacer()
         }.overlay(Button(action: {
-            Log.user().info(message: "pressed Favourite")
+            self.toggleFavourite()
         }, label: { Image(systemName: "heart.fill")
             .font(.body)
             .foregroundColor(favColor)
@@ -47,6 +47,11 @@ struct PetRow: View {
     
     //MARK: - Actions
     private func toggleFavourite() {
-        store.send(.setPet(pet, favourite: !pet.isFavourite))
+        let isFavourite = !pet.isFavourite
+        var imageData: Data?
+        if isFavourite {
+            imageData = pet.uiImage(from: self.cache)?.jpegData(compressionQuality: 1.0)
+        }
+        store.send(.setPet(pet, image: imageData, favourite: !pet.isFavourite))
     }
 }

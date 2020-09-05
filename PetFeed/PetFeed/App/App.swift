@@ -66,6 +66,13 @@ func appReducer(state: inout AppState,
             .map{AppAction.setFetchFavouriteResult(pets: $0)}
             .eraseToAnyPublisher()
     case let .setPet(pet, image, favourite):
+        return environment.service
+            .setPet(pet, image: image, favourite: favourite)
+            .replaceError(with: false)
+            .map{ _ in
+                //TODO: setPetResult should be created to set the State to one updated Pet
+                AppAction.setFetchFavouriteResult(pets: [])
+            }.eraseToAnyPublisher()
         break
     }
     
