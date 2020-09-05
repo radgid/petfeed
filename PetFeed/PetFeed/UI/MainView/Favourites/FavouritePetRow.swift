@@ -26,6 +26,7 @@ struct FavouritePetRow: View {
             Log.user().info(message: "pressed Favourite")
         }, label: { Image(systemName: "heart.fill")
             .font(.body)
+            .foregroundColor(.accentColor)
             .padding()}).buttonStyle(BorderlessButtonStyle())
             ,alignment: .bottomTrailing)
             .background(Color.gray.opacity(0.1))

@@ -76,7 +76,7 @@ class PetFeedTests: XCTestCase {
         //when
         if let jsonData = jsonString.data(using: .utf8) {
             if let petsUrls = try? JSONDecoder().decode([String].self, from: jsonData) {
-                let pets = petsUrls.map {Pet.init($0)}
+                let pets = petsUrls.map {Pet.init($0, isFavourite: false)}
                 //then
                 XCTAssertFalse(pets.isEmpty, "Pets Json must be decoded successfully")
             } else {
@@ -154,24 +154,56 @@ class PetFeedTests: XCTestCase {
         wait(for: [exp], timeout: 2.0)
     }
     
-    func testFetchLocal() throws {
+    func testSetPetLocal() throws {
         //given
+        let imageData = PetApiMock().petImageData()
+        let pet = Pet("test", isFavourite: false)
         //when
-        let exp = XCTestExpectation(description: "Test Fetch Local")
-        let subscription = petApi.fetchFavourites()
+        let exp = XCTestExpectation(description: "Test Set Favourite Pet")
+        let subscription = petApi.setPet(pet, image: imageData, favourite: true)
             .sink(receiveCompletion: { completion in
-                if case .failure(let error) = completion {
-                    //then
-                    XCTFail("Should return Local Pets")
+                if case .failure(_) = completion {
+                    XCTFail("Pet Favourite save should succeed")
                 }
                 exp.fulfill()
-            }, receiveValue: { pets in
-                XCTAssertFalse(pets.isEmpty,"Pet fetch should return Local Pets")
+            }, receiveValue: { success in
+                //then
+                XCTAssertTrue(success)
             })
         
         XCTAssertNotNil(subscription)
         
-        wait(for: [exp], timeout: 2.0)
+        wait(for: [exp], timeout: 110.0)
+    }
+    
+    func testFetchLocal() throws {
+        //given
+        let imageData = PetApiMock().petImageData()
+        let pet = Pet("test", isFavourite: false)
+        //when
+        let exp = XCTestExpectation(description: "Test Fetch Local")
+        
+        let subscription = petApi.setPet(pet, image: imageData, favourite: true)
+            .sink(receiveCompletion: { completion in
+                if case .failure(_) = completion {
+                    XCTFail("Pet Favourite save should succeed")
+                }
+            }, receiveValue: { [weak self] success in
+                self?.petApi.fetchFavourites()
+                    .sink(receiveCompletion: { completion in
+                        if case .failure(let error) = completion {
+                            //then
+                            XCTFail("Should return Local Pets")
+                        }
+                        exp.fulfill()
+                    }, receiveValue: { pets in
+                        XCTAssertFalse(pets.isEmpty,"Pet fetch should return Local Pets")
+                    })
+            })
+        
+        XCTAssertNotNil(subscription)
+        
+        wait(for: [exp], timeout: 100.0)
     }
     
     func testPetDownloadSuccess() throws {
@@ -201,7 +233,7 @@ class PetFeedTests: XCTestCase {
             })
         XCTAssertNotNil(subscription)
         
-        wait(for: [exp], timeout: 110.0)
+        wait(for: [exp], timeout: 1.0)
     }
     
 }

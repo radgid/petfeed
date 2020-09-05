@@ -11,8 +11,10 @@ import Foundation
 struct Pet: Identifiable, Hashable, Codable {
     let id: String = UUID().uuidString
     let url: String
+    let isFavourite: Bool
 
-    init(_ url: String) {
+    init(_ url: String, isFavourite: Bool) {
         self.url = url
+        self.isFavourite = isFavourite
     }
 }

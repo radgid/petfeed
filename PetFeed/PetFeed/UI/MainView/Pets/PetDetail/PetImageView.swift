@@ -14,6 +14,10 @@ struct PetImageView: View {
     let petImage: Image
     let pet: Pet
     
+    private var favColor: Color {
+        return pet.isFavourite ? .accentColor : .gray
+    }
+    
     var body: some View {
         NavigationView {
             VStack {
@@ -32,7 +36,7 @@ struct PetImageView: View {
                 Log.user().info(message: "pressed Favourite")
             }, label: { Image(systemName: "heart.fill")
                 .font(.body)
-                .accentColor(.blue)
+                .foregroundColor(favColor)
                 .padding()}).buttonStyle(BorderlessButtonStyle()),
                      alignment: .bottomTrailing)
         }
@@ -42,7 +46,7 @@ struct PetImageView: View {
 struct PetImageView_Previews: PreviewProvider {
     static var previews: some View {
         PetImageView(petImage: PetApiMock().petImage(),
-                     pet: Pet("dog1.jpg"))
+                     pet: Pet("dog1.jpg", isFavourite: false))
             .environmentObject(Settings.storeMock)
     }
 }

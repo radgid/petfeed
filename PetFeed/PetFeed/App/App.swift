@@ -40,7 +40,7 @@ enum AppAction {
     case fetchFavourite(page: Int)
     case setFetchResult(pets: [Pet])
     case setFetchFavouriteResult(pets: [DisplayablePet])
-    case setPet(_ pet: Pet, favourite: Bool)
+    case setPet(_ pet: Pet, image: Data? = nil, favourite: Bool)
 }
 
 /// Reducer to get the next action from the current state and current action
@@ -65,7 +65,7 @@ func appReducer(state: inout AppState,
             .replaceError(with: [])
             .map{AppAction.setFetchFavouriteResult(pets: $0)}
             .eraseToAnyPublisher()
-    case let .setPet(pet, favourite):
+    case let .setPet(pet, image, favourite):
         break
     }
     

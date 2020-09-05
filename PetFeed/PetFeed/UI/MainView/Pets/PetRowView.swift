@@ -18,6 +18,10 @@ struct PetRow: View {
         self.pet = pet
     }
     
+    private var favColor: Color {
+        return pet.isFavourite ? .accentColor : .gray
+    }
+    
     var body: some View {
         HStack(alignment: .center) {
             Spacer()
@@ -34,9 +38,15 @@ struct PetRow: View {
             Log.user().info(message: "pressed Favourite")
         }, label: { Image(systemName: "heart.fill")
             .font(.body)
+            .foregroundColor(favColor)
             .padding()}).buttonStyle(BorderlessButtonStyle())
             ,alignment: .bottomTrailing)
             .background(Color.gray.opacity(0.1))
             .cornerRadius(8)
+    }
+    
+    //MARK: - Actions
+    private func toggleFavourite() {
+        store.send(.setPet(pet, favourite: !pet.isFavourite))
     }
 }

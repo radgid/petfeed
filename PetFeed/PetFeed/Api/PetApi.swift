@@ -15,6 +15,7 @@ protocol PetRepository {
     func fetch(_ request: PetRequest) -> AnyPublisher<[Pet], PetFailure>
     func download(_ imageUrl: URL) -> AnyPublisher<Data, PetFailure>
     func fetchFavourites(page: Int) -> AnyPublisher<[DisplayablePet], PetFailure>
+    func setPet(_ pet: Pet, image: Data?, favourite: Bool) -> AnyPublisher<Bool, PetFailure>
 }
 
 /// Pet API
@@ -74,7 +75,7 @@ struct PetApi: PetRepository {
         
         //Transform Array of string into Pet structures
         let transformed: AnyPublisher<[Pet], PetFailure> = result.flatMap { (urls) ->  AnyPublisher<[Pet], PetFailure> in
-            let pets = urls.map {Pet.init($0)}
+            let pets = urls.map {Pet.init($0, isFavourite: false)}
             return .future(pets)
         }.eraseToAnyPublisher()
         
@@ -90,5 +91,48 @@ struct PetApi: PetRepository {
         let publisher = session.petPublisher(for: urlRequest)
         
         return publisher
+    }
+    
+    /// Update the Pet
+    /// - Parameters:
+    ///   - pet: Pet to update
+    ///   - image: Optional Image to save
+    ///   - favourite: Is Favourite
+    /// - Returns: Updated Pet
+    func setPet(_ pet: Pet,
+                image: Data? = nil,
+                favourite: Bool) -> AnyPublisher<Bool, PetFailure> {
+        
+        if favourite {
+            if let entity = NSEntityDescription.entity(forEntityName: "FavouritePet",
+                                                       in: managedObjectContext) {
+                
+                if let favPet = NSManagedObject(entity: entity,
+                                                insertInto: managedObjectContext) as? FavouritePet {
+                    favPet.url = pet.url
+                    favPet.image = image
+                }
+            }
+        } else {
+            let fetchRequest =
+                NSFetchRequest<NSFetchRequestResult>(entityName: "FavouritePet")
+            fetchRequest.predicate = NSPredicate(format: "url = %@", pet.url)
+            let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+            
+            do {
+                try managedObjectContext.execute(deleteRequest)
+            } catch let error as NSError {
+                Log.data().error(message: "Could not fetch. \(error), \(error.userInfo)")
+                return .fail(.databaseError(error: error))
+            }
+        }
+        
+        do {
+            try managedObjectContext.save()
+        } catch let error as NSError {
+            Log.data().error(message: "Could not save. \(error), \(error.userInfo)")
+            return .fail(.databaseError(error: error))
+        }
+        return .future(true)
     }
 }
