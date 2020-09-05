@@ -9,7 +9,8 @@
 import Foundation
 import os.log
 
-public enum Log {
+/// OS Log wrapper to simplify the message logging
+enum Log {
     public static var subsystem = Bundle.main.bundleIdentifier!
     case networking(type: OSLog = OSLog(subsystem: subsystem, category: "networking"))
     case data(type: OSLog = OSLog(subsystem: subsystem, category: "data"))

@@ -7,7 +7,9 @@
 //
 
 import Foundation
+
 extension Encodable {
+    /// Any flat Encodable structure can be transformed into Json and have it's variables stringified into URL Params String array of key=value strings
     func urlParams() -> [String]? {
         guard let data = try? JSONEncoder().encode(self) else { return nil }
         guard let dict = try? (JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String: Any]) else { return nil }
@@ -31,6 +33,7 @@ extension Encodable {
         return urlQueryParamsString
     }
 
+    /// Key=value string array can be mapped into URL Query string
     func urlQueryString() -> String? {
         guard let urlParams = urlParams() else {
             return nil

@@ -7,6 +7,8 @@
 //
 
 import Foundation
+
+/// URLProtocol subclass to support Unit Tests
 class MockUrlProtocol: URLProtocol {
     static var requestHandler: ((URLRequest) throws -> (HTTPURLResponse, Data?))?
 

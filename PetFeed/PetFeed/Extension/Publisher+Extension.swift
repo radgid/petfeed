@@ -9,14 +9,16 @@
 import Foundation
 import Combine
 
-public typealias PetPublisher = AnyPublisher<Data, PetFailure>
+typealias PetPublisher = AnyPublisher<Data, PetFailure>
+///Default implementation of Data unwrap method for the PetPublisher
 extension PetPublisher {
-    public func unwrap<O: Decodable>(with wrapper: ModelWrapper) -> AnyPublisher<O, PetFailure> {
+    func unwrap<O: Decodable>(with wrapper: ModelWrapper) -> AnyPublisher<O, PetFailure> {
         return wrapper.unwrap(publisher: self.eraseToAnyPublisher())
     }
 }
 
-public extension Publisher {
+/// Helper methods to wrap  Combine Async methods 
+extension Publisher {
 
     static func empty() -> AnyPublisher<Output, Failure> {
         return Empty()

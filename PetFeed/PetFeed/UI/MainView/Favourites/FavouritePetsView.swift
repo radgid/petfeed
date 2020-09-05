@@ -10,8 +10,21 @@ import SwiftUI
 
 struct FavouritePetsView: View {
     let pets: [DisplayablePet]
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack{
+            List {
+                ForEach(Array(pets.enumerated()), id: \.element) { idx, pet in
+                    VStack {
+                        FavouritePetRow(pet: pet).onTapGesture {
+                            Log.user().info(message: "pressed Dog detail")
+//                            self.selection = pet
+//                            self.isPresented.toggle()
+                            }
+                    }
+                }
+            }
+        }
     }
 }
 

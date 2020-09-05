@@ -9,12 +9,15 @@
 import Foundation
 import SwiftUI
 
-struct DisplayablePet: Identifiable {
+struct DisplayablePet: Hashable, Identifiable {
     let id: String
     let image: Image
     
     init(id: String, image: Image) {
         self.id = id
         self.image = image
+    }
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
     }
 }

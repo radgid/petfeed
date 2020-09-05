@@ -9,16 +9,18 @@
 import Foundation
 import Combine
 
-public protocol ModelWrapper {
 
+/// Support for unwrapping the Data into the Decodable structure
+protocol ModelWrapper {
     init()
     func unwrap<V: Decodable>(publisher: PetPublisher) -> AnyPublisher<V, PetFailure>
 }
 
-public struct JsonWrapper: ModelWrapper {
+/// Implementation of Json data unwrapping into Decodable structure
+struct JsonWrapper: ModelWrapper {
 
-    public init() {}
-    public func unwrap<V: Decodable>(publisher: PetPublisher) -> AnyPublisher<V, PetFailure> {
+    init() {}
+    func unwrap<V: Decodable>(publisher: PetPublisher) -> AnyPublisher<V, PetFailure> {
         return publisher
             .decode(type: V.self, decoder: JSONDecoder())
             .mapError {error -> PetFailure in

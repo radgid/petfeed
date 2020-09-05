@@ -11,7 +11,7 @@ import Combine
 import UIKit
 import SwiftUI
 
-/// Pet API Mock
+/// Pet API Mock - used in Unit Tests as well as SwiftUi Previews
 struct PetApiMock: PetRepository {
     func fetch(_ request: PetRequest) -> AnyPublisher<[Pet], PetFailure> {
         let pets = ["https://dog1.jpg", "https://dog2.jpg", "https://dog3.jpg"].map{Pet.init($0)}

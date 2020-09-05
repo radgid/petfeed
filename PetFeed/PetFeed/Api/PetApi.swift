@@ -10,6 +10,7 @@ import Foundation
 import Combine
 import CoreData
 
+/// Data Repository interfaces
 protocol PetRepository {
     func fetch(_ request: PetRequest) -> AnyPublisher<[Pet], PetFailure>
     func download(_ imageUrl: URL) -> AnyPublisher<Data, PetFailure>

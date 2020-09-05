@@ -16,7 +16,6 @@ struct MainView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @State private var selection = 0
     @Environment(\.imageCache) var cache: ImageCache
-    @State private var imageIsPresented: Bool = false
     
     //MARK: - Subviews
     var tabView: some View {
@@ -27,19 +26,16 @@ struct MainView: View {
                         Image(systemName: "list.dash")
                         Text("All Posts")
                     }
-            }
-            .tag(0)
-            Text("Favourites").onAppear {
-                self.fetchFavourite()
-            }
-                .font(.title)
-                .tabItem {
-                    VStack {
-                        Image(systemName: "heart.fill")
-                        Text("Favourites")
-                    }
-            }
-            .tag(1)
+            }.tag(0)
+            FavouritePetsView(pets: store.state.fetchFavouriteResult)
+                .onAppear {
+                    self.fetchFavourite()
+            }.tabItem {
+                VStack {
+                    Image(systemName: "heart.fill")
+                    Text("Favourites")
+                }
+            }.tag(1)
         }
     }
     

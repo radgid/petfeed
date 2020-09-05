@@ -11,6 +11,9 @@ import Combine
 
 extension URLSession {
     
+    /// Pet publisher posting  <Data, Faliure>
+    /// - Parameter request: URL request
+    /// - Returns: Pet Publisher
     func petPublisher(for request: URLRequest) -> PetPublisher {
         self.dataTaskPublisher(for: request)
             .tryMap({ (data: Data, response: URLResponse) -> Data in
