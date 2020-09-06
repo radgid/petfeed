@@ -7,32 +7,17 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "971BAB43-ACBF-4FF1-ADB5-6AA9CF2EBFAA"
-            shouldBeEnabled = "Yes"
+            uuid = "540EA0B6-002F-4733-AC88-D9C539F5A640"
+            shouldBeEnabled = "No"
+            condition = "isFavourite == true"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "PetFeedTests/PetFeedTests.swift"
+            filePath = "PetFeed/Model/Pet.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "200"
-            endingLineNumber = "200"
-            landmarkName = "testFetchLocal()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "ACBD0B15-69FB-420E-AEEC-6261F120C070"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "PetFeedTests/PetFeedTests.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "165"
-            endingLineNumber = "165"
-            landmarkName = "testSetPetLocal()"
+            startingLineNumber = "18"
+            endingLineNumber = "18"
+            landmarkName = "init(_:isFavourite:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

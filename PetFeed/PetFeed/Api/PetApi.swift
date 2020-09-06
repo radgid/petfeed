@@ -29,6 +29,24 @@ struct PetApi: PetRepository {
         self.managedObjectContext = managedObjectContext
     }
 
+    func fetchFavouritesIds() -> [String] {
+        let fetchRequest =
+            NSFetchRequest<NSDictionary>(entityName: "FavouritePet")
+        fetchRequest.resultType = .dictionaryResultType
+        fetchRequest.propertiesToFetch = ["url"]
+        
+        do {
+            let petsNSDict = try managedObjectContext.fetch(fetchRequest)
+            return petsNSDict
+                .map { $0.allValues}
+                .flatMap{$0}
+                .compactMap{ String(describing: $0)}            
+        } catch let error as NSError {
+            Log.data().error(message: "Could not fetch. \(error), \(error.userInfo)")
+            return []
+        }
+    }
+    
     /// Fetch stored - favourite - Pet Images
     /// - Parameter page: Paging
     /// - Returns: Favourite Publisher
@@ -67,7 +85,7 @@ struct PetApi: PetRepository {
         let session = URLSession(configuration: sessionConfiguration)
         let urlRequest = URLRequest(url: url)
         let publisher = session.petPublisher(for: urlRequest)
-
+        let favouriteIds = fetchFavouritesIds()
         //Unwrap Array of Strings from the Json
         let result: AnyPublisher<[String], PetFailure> = publisher.unwrap(with: JsonWrapper())
             .eraseToAnyPublisher()
@@ -75,7 +93,7 @@ struct PetApi: PetRepository {
         //Transform Array of string into Pet structures
         let transformed: AnyPublisher<[Pet], PetFailure> =
             result.flatMap { (urls) ->  AnyPublisher<[Pet], PetFailure> in
-            let pets = urls.map {Pet.init($0, isFavourite: false)}
+                let pets = urls.map {Pet.init($0, isFavourite: favouriteIds.contains($0))}
             return .future(pets)
         }.eraseToAnyPublisher()
 

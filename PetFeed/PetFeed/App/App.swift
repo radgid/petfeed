@@ -11,7 +11,9 @@ import Combine
 
 /// Constants used throughout the App
 struct Constants {
-    static let pageSize = 5
+    static let pageSize = 100
+    //TODO: Paging to be considered - at the moment the Mock Pet server does not preserve any kind of sort so paging makes only sence
+    // in terms of loading batches of data as oposed to sorted data
 }
 
 /// Settings used throughout the App

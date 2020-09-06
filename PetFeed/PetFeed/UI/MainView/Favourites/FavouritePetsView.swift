@@ -17,9 +17,7 @@ struct FavouritePetsView: View {
             List {
                 ForEach(Array(pets.enumerated()), id: \.element) { _, pet in
                     VStack {
-                        FavouritePetRow(pet: pet).onTapGesture {
-                            Log.user().info(message: "pressed Dog detail")
-                        }
+                        FavouritePetRow(pet: pet)
                     }
                 }
             }

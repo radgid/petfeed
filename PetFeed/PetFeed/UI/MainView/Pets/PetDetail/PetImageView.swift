@@ -11,15 +11,16 @@ import SwiftUI
 struct PetImageView: View {
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var store: AppStore
+    @Environment(\.imageCache) var cache: ImageCache
     let petImage: Image
-    let pet: Pet
+    @State var pet: Pet
 
     private var favColor: Color {
         return pet.isFavourite ? .accentColor : .gray
     }
 
     var body: some View {
-        NavigationView {
+        ZStack {
             VStack {
                 petImage
                     .resizable()
@@ -33,13 +34,27 @@ struct PetImageView: View {
                 self.presentationMode.wrappedValue.dismiss()
             }
             .overlay(Button(action: {
-                Log.user().info(message: "pressed Favourite")
+                self.toggleFavourite()
             }, label: { Image(systemName: "heart.fill")
                 .font(.body)
                 .foregroundColor(favColor)
                 .padding()}).buttonStyle(BorderlessButtonStyle()),
                      alignment: .bottomTrailing)
+        }.onReceive(self.store.$state) { state in
+            if let updatedPet = state.updatedPet,
+                updatedPet.url == self.pet.url {
+                    self.pet = updatedPet
+            }
         }
+    }
+    
+    private func toggleFavourite() {
+        let isFavourite = !pet.isFavourite
+        var imageData: Data?
+        if isFavourite {
+            imageData = pet.uiImage(from: self.cache)?.jpegData(compressionQuality: 1.0)
+        }
+        store.send(.updatePet(pet, image: imageData, favourite: !pet.isFavourite))
     }
 }
 

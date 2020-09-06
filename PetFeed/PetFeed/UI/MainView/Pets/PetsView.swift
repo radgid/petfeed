@@ -22,13 +22,14 @@ struct PetsView: View {
                 ForEach(Array(pets.enumerated()), id: \.element) { _, pet in
                     VStack {
                         PetRow(pet: pet).onTapGesture {
-                            Log.user().info(message: "pressed Dog detail")
                             self.selection = pet
                             self.isPresented.toggle()
                             }
                         .sheet(isPresented: self.$isPresented) {
+                            //TODO: show the backdrop to soften the popup appearance
                             if self.selection != nil {
                                 PetImageView(petImage: self.selection!.image(from: self.cache), pet: self.selection!)
+                                    .environmentObject(self.store)
                             } else {
                                 EmptyView()
                             }

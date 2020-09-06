@@ -166,9 +166,9 @@ class PetFeedTests: XCTestCase {
                     XCTFail("Pet Favourite save should succeed")
                 }
                 exp.fulfill()
-            }, receiveValue: { success in
+            }, receiveValue: { updatedPet in
                 //then
-                XCTAssertTrue(success)
+                XCTAssertTrue(!updatedPet.url.isEmpty)
             })
 
         XCTAssertNotNil(subscription)
@@ -189,9 +189,9 @@ class PetFeedTests: XCTestCase {
                     XCTFail("Pet Favourite save should succeed")
                 }
             }, receiveValue: { [weak self] _ in
-                self?.petApi.fetchFavourites()
+                _ = self?.petApi.fetchFavourites()
                     .sink(receiveCompletion: { completion in
-                        if case .failure(let error) = completion {
+                        if case .failure(_) = completion {
                             //then
                             XCTFail("Should return Local Pets")
                         }
@@ -203,7 +203,31 @@ class PetFeedTests: XCTestCase {
 
         XCTAssertNotNil(subscription)
 
-        wait(for: [exp], timeout: 100.0)
+        wait(for: [exp], timeout: 2.0)
+    }
+    
+    func testFetchArrayLocal() throws {
+        //given
+        let imageData = PetApiMock().petImageData()
+        let pet = Pet("test", isFavourite: false)
+        //when
+        let exp = XCTestExpectation(description: "Test Fetch Local")
+
+        let subscription = petApi.setPet(pet, image: imageData, favourite: true)
+            .sink(receiveCompletion: { completion in
+                if case .failure = completion {
+                    XCTFail("Pet Favourite save should succeed")
+                }
+            }, receiveValue: { [weak self] _ in
+                
+                let urls = self?.petApi.fetchFavouritesIds()
+                XCTAssertFalse(urls?.isEmpty ?? false, "Local Favourite Pets URLS should not be empty")
+                exp.fulfill()
+            })
+
+        XCTAssertNotNil(subscription)
+
+        wait(for: [exp], timeout: 2.0)
     }
 
     func testPetDownloadSuccess() throws {
