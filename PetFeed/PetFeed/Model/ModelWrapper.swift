@@ -9,7 +9,6 @@
 import Foundation
 import Combine
 
-
 /// Support for unwrapping the Data into the Decodable structure
 protocol ModelWrapper {
     init()

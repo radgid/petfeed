@@ -16,7 +16,7 @@ extension Pet {
         }
         return nil
     }
-    
+
     func image(from cache: ImageCache) -> Image {
         if let image = uiImage(from: cache) {
             return Image(uiImage: image)

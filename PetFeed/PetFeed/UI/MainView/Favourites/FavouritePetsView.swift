@@ -9,28 +9,28 @@
 import SwiftUI
 
 struct FavouritePetsView: View {
-    let pets: [DisplayablePet]
-    
+    @State private var pets: [DisplayablePet] = []
+    @EnvironmentObject var store: AppStore
+
     var body: some View {
-        VStack{
+        VStack {
             List {
-                ForEach(Array(pets.enumerated()), id: \.element) { idx, pet in
+                ForEach(Array(pets.enumerated()), id: \.element) { _, pet in
                     VStack {
                         FavouritePetRow(pet: pet).onTapGesture {
                             Log.user().info(message: "pressed Dog detail")
-//                            self.selection = pet
-//                            self.isPresented.toggle()
-                            }
+                        }
                     }
                 }
             }
+        }.onReceive(self.store.$state) { state in
+            self.pets = state.fetchFavouriteResult
         }
     }
 }
 
 struct FavouritePetsView_Previews: PreviewProvider {
     static var previews: some View {
-        FavouritePetsView(pets: [DisplayablePet(id: "test",
-                                                image: PetApiMock().petImage())] )
+        FavouritePetsView()
     }
 }

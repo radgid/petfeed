@@ -151,9 +151,9 @@
 		4B63ABFF2503503C00D2CF6E /* Pets */ = {
 			isa = PBXGroup;
 			children = (
-				4B63ABF5250257A600D2CF6E /* PetDetail */,
 				4B63ABF725025F2700D2CF6E /* PetsView.swift */,
 				4B63ABF925025F4D00D2CF6E /* PetRowView.swift */,
+				4B63ABF5250257A600D2CF6E /* PetDetail */,
 			);
 			path = Pets;
 			sourceTree = "<group>";

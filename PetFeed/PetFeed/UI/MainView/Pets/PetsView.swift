@@ -11,14 +11,15 @@ import SwiftUI
 
 struct PetsView: View {
     @Environment(\.imageCache) var cache: ImageCache
-    let pets: [Pet]
+    @EnvironmentObject var store: AppStore
+    @State private var pets: [Pet] = []
     @State private var isPresented: Bool = false
     @State private var selection: Pet?
-    
+
     var body: some View {
-        VStack{
+        VStack {
             List {
-                ForEach(Array(pets.enumerated()), id: \.element) { idx, pet in
+                ForEach(Array(pets.enumerated()), id: \.element) { _, pet in
                     VStack {
                         PetRow(pet: pet).onTapGesture {
                             Log.user().info(message: "pressed Dog detail")
@@ -35,7 +36,8 @@ struct PetsView: View {
                     }
                 }
             }
+        }.onReceive(self.store.$state) { state in
+            self.pets = state.fetchResult
         }
     }
 }
-

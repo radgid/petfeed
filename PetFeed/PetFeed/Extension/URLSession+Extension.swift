@@ -10,7 +10,7 @@ import Foundation
 import Combine
 
 extension URLSession {
-    
+
     /// Pet publisher posting  <Data, Faliure>
     /// - Parameter request: URL request
     /// - Returns: Pet Publisher

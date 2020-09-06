@@ -32,6 +32,7 @@ struct PetEnvironment {
 struct AppState {
     var fetchResult: [Pet] = []
     var fetchFavouriteResult: [DisplayablePet] = []
+    var updatedPet: Pet?
 }
 
 /// App Actions
@@ -40,7 +41,8 @@ enum AppAction {
     case fetchFavourite(page: Int)
     case setFetchResult(pets: [Pet])
     case setFetchFavouriteResult(pets: [DisplayablePet])
-    case setPet(_ pet: Pet, image: Data? = nil, favourite: Bool)
+    case updatePet(_ pet: Pet, image: Data? = nil, favourite: Bool)
+    case setUpdatedPet(pet: Pet)
 }
 
 /// Reducer to get the next action from the current state and current action
@@ -52,31 +54,29 @@ func appReducer(state: inout AppState,
         state.fetchResult = pets
     case let .setFetchFavouriteResult(pets):
         state.fetchFavouriteResult = pets
+    case let .setUpdatedPet(pet):
+        state.updatedPet = pet
     case let .fetch(page):
         let request = PetRequest(count: Constants.pageSize * page)
         return environment.service
             .fetch(request)
             .replaceError(with: [])
-            .map{AppAction.setFetchResult(pets: $0)}
+            .map {AppAction.setFetchResult(pets: $0)}
             .eraseToAnyPublisher()
     case let .fetchFavourite(page):
         return environment.service
             .fetchFavourites(page: page)
             .replaceError(with: [])
-            .map{AppAction.setFetchFavouriteResult(pets: $0)}
+            .map {AppAction.setFetchFavouriteResult(pets: $0)}
             .eraseToAnyPublisher()
-    case let .setPet(pet, image, favourite):
+    case let .updatePet(pet, image, favourite):
         return environment.service
             .setPet(pet, image: image, favourite: favourite)
-            .replaceError(with: false)
-            .map{ _ in
-                //TODO: setPetResult should be created to set the State to one updated Pet
-                AppAction.setFetchFavouriteResult(pets: [])
-            }.eraseToAnyPublisher()
-        break
+            .replaceError(with: pet)
+            .map { AppAction.setUpdatedPet(pet: $0)}
+            .eraseToAnyPublisher()
     }
-    
-    
+
     return Empty().eraseToAnyPublisher()
 }
 

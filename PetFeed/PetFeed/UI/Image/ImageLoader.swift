@@ -13,12 +13,12 @@ import Combine
 /// Image loader responsible for loading the Image either from Cache or Downloading from the internet
 class ImageLoader: ObservableObject {
     private static let imageProcessingQueue = DispatchQueue(label: "ImageProcessing")
-    
-    private var cache: ImageCache? = nil
-    private var url: URL? = nil
-    private var service: PetRepository? = nil
+
+    private var cache: ImageCache?
+    private var url: URL?
+    private var service: PetRepository?
     @Published var image: UIImage?
-    
+
     private(set) var isLoading = false
     private var cancellable: AnyCancellable?
     init(url: URL?, cache: ImageCache? = nil, service: PetRepository) {
@@ -29,11 +29,11 @@ class ImageLoader: ObservableObject {
         self.service = service
         self.cache = cache
     }
-    
+
     deinit {
         cancel()
     }
-    
+
     func load() {
         guard let url = url else {
             return
@@ -43,7 +43,7 @@ class ImageLoader: ObservableObject {
             self.image = image
             return
         }
-        
+
         cancellable = service?.download(url)
             .subscribe(on: Self.imageProcessingQueue)
             .map { UIImage(data: $0) }
@@ -54,26 +54,26 @@ class ImageLoader: ObservableObject {
                           receiveCancel: { [weak self] in self?.onFinish() })
             .receive(on: DispatchQueue.main)
             .assign(to: \.image, on: self)
-        
+
     }
-    
+
     private func cache(_ image: UIImage?) {
         guard let url = url else {
             return
         }
         image.map { cache?[url] = $0 }
     }
-    
+
     func cancel() {
 //        for cancellable in bag {
             cancellable?.cancel()
 //        }
     }
-    
+
     private func onStart() {
         isLoading = true
     }
-    
+
     private func onFinish() {
         isLoading = false
     }

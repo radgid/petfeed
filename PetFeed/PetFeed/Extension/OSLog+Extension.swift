@@ -15,7 +15,7 @@ enum Log {
     case networking(type: OSLog = OSLog(subsystem: subsystem, category: "networking"))
     case data(type: OSLog = OSLog(subsystem: subsystem, category: "data"))
     case user(type: OSLog = OSLog(subsystem: subsystem, category: "user"))
-    
+
     public func associatedValue() -> OSLog {
         switch self {
         case .networking(let logType):
@@ -26,7 +26,7 @@ enum Log {
             return logType
         }
     }
-    
+
 }
 
 extension Log {

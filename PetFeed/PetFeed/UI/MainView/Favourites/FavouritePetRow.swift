@@ -1,4 +1,3 @@
-
 //
 //  FavouritePetRow.swift
 //  PetFeed
@@ -11,6 +10,8 @@ import SwiftUI
 
 struct FavouritePetRow: View {
     let pet: DisplayablePet
+    @EnvironmentObject var store: AppStore
+
     var body: some View {
         HStack(alignment: .center) {
             Spacer()
@@ -23,14 +24,19 @@ struct FavouritePetRow: View {
                 .shadow(color: Color.gray.opacity(0.5), radius: 14, x: 14, y: 14)
             Spacer()
         }.overlay(Button(action: {
-            Log.user().info(message: "pressed Favourite")
+            self.toggleFavourite()
         }, label: { Image(systemName: "heart.fill")
             .font(.body)
             .foregroundColor(.accentColor)
-            .padding()}).buttonStyle(BorderlessButtonStyle())
-            ,alignment: .bottomTrailing)
+            .padding()}).buttonStyle(BorderlessButtonStyle()), alignment: .bottomTrailing)
             .background(Color.gray.opacity(0.1))
             .cornerRadius(8)
+    }
+
+    // MARK: - Actions
+    private func toggleFavourite() {
+        store.send(.updatePet(Pet(pet.id, isFavourite: true), favourite: false))
+        store.send(.fetchFavourite(page: 1))
     }
 }
 

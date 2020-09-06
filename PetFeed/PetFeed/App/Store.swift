@@ -13,7 +13,6 @@ import Combine
 typealias Reducer<State, Action, PetEnvironment> =
 (inout State, Action, PetEnvironment) -> AnyPublisher<Action, Never>?
 
-
 /// Store to keep the single source of truth "State" and an environment which will be responsible for any data manipulation work
 final class Store<State, Action, PetEnvironment>: ObservableObject {
     @Published private(set) var state: State
@@ -43,4 +42,3 @@ final class Store<State, Action, PetEnvironment>: ObservableObject {
             .store(in: &cancellables)
     }
 }
-

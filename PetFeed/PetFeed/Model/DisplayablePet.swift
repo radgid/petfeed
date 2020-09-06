@@ -12,7 +12,7 @@ import SwiftUI
 struct DisplayablePet: Hashable, Identifiable {
     let id: String
     let image: Image
-    
+
     init(id: String, image: Image) {
         self.id = id
         self.image = image

@@ -10,48 +10,50 @@ import Foundation
 import SwiftUI
 
 struct PetRow: View {
-    let pet: Pet
+    @State var pet: Pet
     @Environment(\.imageCache) var cache: ImageCache
     @EnvironmentObject var store: AppStore
-    
-    init(pet: Pet) {
-        self.pet = pet
-    }
-    
+
     private var favColor: Color {
         return pet.isFavourite ? .accentColor : .gray
     }
-    
+
     var body: some View {
-        HStack(alignment: .center) {
-            Spacer()
-            AsyncImage(url: URL(string: pet.url),
-                       placeholder: Image(systemName: "hourglass").font(.title),
-                       cache: self.cache,
-                service: store.environment.service)
-                .frame(height: 180)
-                .padding()
-                .shadow(color: Color.white.opacity(0.9), radius: 10, x: -10, y: -10)
-                .shadow(color: Color.gray.opacity(0.5), radius: 14, x: 14, y: 14)
-            Spacer()
-        }.overlay(Button(action: {
-            self.toggleFavourite()
-        }, label: { Image(systemName: "heart.fill")
-            .font(.body)
-            .foregroundColor(favColor)
-            .padding()}).buttonStyle(BorderlessButtonStyle())
-            ,alignment: .bottomTrailing)
-            .background(Color.gray.opacity(0.1))
-            .cornerRadius(8)
+        ZStack {
+            HStack(alignment: .center) {
+                Spacer()
+                AsyncImage(url: URL(string: pet.url),
+                           placeholder: Image(systemName: "hourglass").font(.title),
+                           cache: self.cache,
+                           service: store.environment.service)
+                    .frame(height: 180)
+                    .padding()
+                    .shadow(color: Color.white.opacity(0.9), radius: 10, x: -10, y: -10)
+                    .shadow(color: Color.gray.opacity(0.5), radius: 14, x: 14, y: 14)
+                Spacer()
+            }.overlay(Button(action: {
+                self.toggleFavourite()
+            }, label: { Image(systemName: "heart.fill")
+                .font(.body)
+                .foregroundColor(favColor)
+                .padding()}).buttonStyle(BorderlessButtonStyle()), alignment: .bottomTrailing)
+                .background(Color.gray.opacity(0.1))
+                .cornerRadius(8)
+        }.onReceive(self.store.$state) { state in
+            if let updatedPet = state.updatedPet,
+                updatedPet.url == self.pet.url {
+                    self.pet = updatedPet
+            }
+        }
     }
-    
-    //MARK: - Actions
+
+    // MARK: - Actions
     private func toggleFavourite() {
         let isFavourite = !pet.isFavourite
         var imageData: Data?
         if isFavourite {
             imageData = pet.uiImage(from: self.cache)?.jpegData(compressionQuality: 1.0)
         }
-        store.send(.setPet(pet, image: imageData, favourite: !pet.isFavourite))
+        store.send(.updatePet(pet, image: imageData, favourite: !pet.isFavourite))
     }
 }

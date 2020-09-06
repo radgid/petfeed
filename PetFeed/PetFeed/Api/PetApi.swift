@@ -15,7 +15,7 @@ protocol PetRepository {
     func fetch(_ request: PetRequest) -> AnyPublisher<[Pet], PetFailure>
     func download(_ imageUrl: URL) -> AnyPublisher<Data, PetFailure>
     func fetchFavourites(page: Int) -> AnyPublisher<[DisplayablePet], PetFailure>
-    func setPet(_ pet: Pet, image: Data?, favourite: Bool) -> AnyPublisher<Bool, PetFailure>
+    func setPet(_ pet: Pet, image: Data?, favourite: Bool) -> AnyPublisher<Pet, PetFailure>
 }
 
 /// Pet API
@@ -28,7 +28,7 @@ struct PetApi: PetRepository {
         self.sessionConfiguration = sessionConfiguration
         self.managedObjectContext = managedObjectContext
     }
-    
+
     /// Fetch stored - favourite - Pet Images
     /// - Parameter page: Paging
     /// - Returns: Favourite Publisher
@@ -53,9 +53,8 @@ struct PetApi: PetRepository {
             Log.data().error(message: "Could not fetch. \(error), \(error.userInfo)")
             return .fail(.databaseError(error: error))
         }
-        return .fail(.invalidRequest)
     }
-    
+
     /// Fetches Pets information
     /// - Parameter request: Request details for fetching pets
     /// - Returns: Pets details publisher
@@ -64,24 +63,25 @@ struct PetApi: PetRepository {
             let url = URL(string: host + "?" + urlQuery) else {
                 return .fail(.invalidRequest)
         }
-        
+
         let session = URLSession(configuration: sessionConfiguration)
         let urlRequest = URLRequest(url: url)
         let publisher = session.petPublisher(for: urlRequest)
-        
+
         //Unwrap Array of Strings from the Json
         let result: AnyPublisher<[String], PetFailure> = publisher.unwrap(with: JsonWrapper())
             .eraseToAnyPublisher()
-        
+
         //Transform Array of string into Pet structures
-        let transformed: AnyPublisher<[Pet], PetFailure> = result.flatMap { (urls) ->  AnyPublisher<[Pet], PetFailure> in
+        let transformed: AnyPublisher<[Pet], PetFailure> =
+            result.flatMap { (urls) ->  AnyPublisher<[Pet], PetFailure> in
             let pets = urls.map {Pet.init($0, isFavourite: false)}
             return .future(pets)
         }.eraseToAnyPublisher()
-        
+
         return transformed
     }
-    
+
     /// Download image from URL
     /// - Parameter imageUrl: URL of the Image
     /// - Returns: Image Data Publisher
@@ -89,10 +89,10 @@ struct PetApi: PetRepository {
         let session = URLSession(configuration: sessionConfiguration)
         let urlRequest = URLRequest(url: imageUrl)
         let publisher = session.petPublisher(for: urlRequest)
-        
+
         return publisher
     }
-    
+
     /// Update the Pet
     /// - Parameters:
     ///   - pet: Pet to update
@@ -101,12 +101,13 @@ struct PetApi: PetRepository {
     /// - Returns: Updated Pet
     func setPet(_ pet: Pet,
                 image: Data? = nil,
-                favourite: Bool) -> AnyPublisher<Bool, PetFailure> {
-        
+                favourite: Bool) -> AnyPublisher<Pet, PetFailure> {
+
+        let modifiedPet = Pet(pet.url, isFavourite: favourite)
         if favourite {
             if let entity = NSEntityDescription.entity(forEntityName: "FavouritePet",
                                                        in: managedObjectContext) {
-                
+
                 if let favPet = NSManagedObject(entity: entity,
                                                 insertInto: managedObjectContext) as? FavouritePet {
                     favPet.url = pet.url
@@ -118,7 +119,7 @@ struct PetApi: PetRepository {
                 NSFetchRequest<NSFetchRequestResult>(entityName: "FavouritePet")
             fetchRequest.predicate = NSPredicate(format: "url = %@", pet.url)
             let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
-            
+
             do {
                 try managedObjectContext.execute(deleteRequest)
             } catch let error as NSError {
@@ -126,13 +127,13 @@ struct PetApi: PetRepository {
                 return .fail(.databaseError(error: error))
             }
         }
-        
+
         do {
             try managedObjectContext.save()
         } catch let error as NSError {
             Log.data().error(message: "Could not save. \(error), \(error.userInfo)")
             return .fail(.databaseError(error: error))
         }
-        return .future(true)
+        return .future(modifiedPet)
     }
 }

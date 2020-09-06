@@ -14,10 +14,10 @@ import SwiftUI
 /// Pet API Mock - used in Unit Tests as well as SwiftUi Previews
 struct PetApiMock: PetRepository {
     func fetch(_ request: PetRequest) -> AnyPublisher<[Pet], PetFailure> {
-        let pets = ["https://dog1.jpg", "https://dog2.jpg", "https://dog3.jpg"].map{Pet.init($0, isFavourite: false)}
+        let pets = ["https://dog1.jpg", "https://dog2.jpg", "https://dog3.jpg"].map {Pet.init($0, isFavourite: false)}
         return .future(pets)
     }
-    
+
     func download(_ imageUrl: URL) -> AnyPublisher<Data, PetFailure> {
         if let path = Bundle.main.path(forResource: "dog1", ofType: "jpg") {
             if let data = try? Data(contentsOf: URL(fileURLWithPath: path)) {
@@ -26,9 +26,9 @@ struct PetApiMock: PetRepository {
         }
         return .fail(.invalidRequest)
     }
-    
+
     func fetchFavourites(page: Int) -> AnyPublisher<[DisplayablePet], PetFailure> {
-        let pets = ["https://dog1.jpg", "https://dog2.jpg", "https://dog3.jpg"].map{DisplayablePet.init(id: $0, image: petImage())}
+        let pets = ["https://dog1.jpg", "https://dog2.jpg", "https://dog3.jpg"].map {DisplayablePet.init(id: $0, image: petImage())}
         return .future(pets)
     }
 
@@ -40,7 +40,7 @@ struct PetApiMock: PetRepository {
         }
         return UIImage(systemName: "hourglass")?.jpegData(compressionQuality: 1.0)
     }
-    
+
     func petImage() -> Image {
         if let path = Bundle.main.path(forResource: "dog1", ofType: "jpg") {
             if let data = try? Data(contentsOf: URL(fileURLWithPath: path)) {
@@ -49,10 +49,10 @@ struct PetApiMock: PetRepository {
         }
         return Image(systemName: "hourglass")
     }
-    
+
     func setPet(_ pet: Pet,
                 image: Data? = nil,
-                favourite: Bool) -> AnyPublisher<Bool, PetFailure> {
+                favourite: Bool) -> AnyPublisher<Pet, PetFailure> {
         return .fail(.invalidRequest)
     }
 }

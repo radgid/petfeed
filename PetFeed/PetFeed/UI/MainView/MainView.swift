@@ -9,25 +9,24 @@
 import SwiftUI
 import Combine
 
-
 /// Main View
 struct MainView: View {
     @EnvironmentObject var store: AppStore
     @Environment(\.managedObjectContext) var managedObjectContext
     @State private var selection = 0
     @Environment(\.imageCache) var cache: ImageCache
-    
-    //MARK: - Subviews
+
+    // MARK: - Subviews
     var tabView: some View {
         TabView(selection: $selection) {
-            PetsView(pets: store.state.fetchResult)
+            PetsView()
                 .tabItem {
                     VStack {
                         Image(systemName: "list.dash")
                         Text("All Posts")
                     }
             }.tag(0)
-            FavouritePetsView(pets: store.state.fetchFavouriteResult)
+            FavouritePetsView()
                 .onAppear {
                     self.fetchFavourite()
             }.tabItem {
@@ -38,7 +37,7 @@ struct MainView: View {
             }.tag(1)
         }
     }
-    
+
     // MARK: - Body
     var body: some View {
         tabView.onAppear {
@@ -46,8 +45,8 @@ struct MainView: View {
             UITableView.appearance().separatorStyle = .none
         }
     }
-    
-    //MARK: - Actions
+
+    // MARK: - Actions
     private func fetch() {
         store.send(.fetch(page:1))
     }
@@ -56,7 +55,7 @@ struct MainView: View {
     }
 }
 
-//MARK: - Preview
+// MARK: - Preview
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         MainView().environmentObject(Settings.storeMock)

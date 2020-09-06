@@ -13,11 +13,11 @@ struct PetImageView: View {
     @EnvironmentObject var store: AppStore
     let petImage: Image
     let pet: Pet
-    
+
     private var favColor: Color {
         return pet.isFavourite ? .accentColor : .gray
     }
-    
+
     var body: some View {
         NavigationView {
             VStack {
