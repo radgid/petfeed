@@ -12,7 +12,7 @@ import SwiftUI
 struct BackgroundShadow: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .shadow(color: Color.white.opacity(0.9), radius: 10, x: -10, y: -10)
-            .shadow(color: Color.gray.opacity(0.5), radius: 14, x: 14, y: 14)
+            .shadow(color: Color(.systemFill), radius: 10, x: -10, y: -10)
+            .shadow(color: Color(.systemGray), radius: 14, x: 14, y: 14)
     }
 }

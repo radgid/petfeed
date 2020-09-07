@@ -44,6 +44,8 @@
 		4BAB0CA325010EF8002EB709 /* AsyncImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAB0CA225010EF8002EB709 /* AsyncImage.swift */; };
 		4BAB0CA5250114E7002EB709 /* Environment+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAB0CA4250114E7002EB709 /* Environment+Extension.swift */; };
 		4BB6202F2506165300063BE7 /* BackgroundShadow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB6202E2506165300063BE7 /* BackgroundShadow.swift */; };
+		4BB6203125065DA300063BE7 /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB6203025065DA300063BE7 /* ErrorView.swift */; };
+		4BB6203325065DEB00063BE7 /* ErrorViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB6203225065DEB00063BE7 /* ErrorViewModifier.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -106,6 +108,8 @@
 		4BAB0CA225010EF8002EB709 /* AsyncImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncImage.swift; sourceTree = "<group>"; };
 		4BAB0CA4250114E7002EB709 /* Environment+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Environment+Extension.swift"; sourceTree = "<group>"; };
 		4BB6202E2506165300063BE7 /* BackgroundShadow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundShadow.swift; sourceTree = "<group>"; };
+		4BB6203025065DA300063BE7 /* ErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
+		4BB6203225065DEB00063BE7 /* ErrorViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorViewModifier.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -303,6 +307,7 @@
 			isa = PBXGroup;
 			children = (
 				4BAB0C492500C7DB002EB709 /* MainView.swift */,
+				4BB6203025065DA300063BE7 /* ErrorView.swift */,
 				4B63ABFF2503503C00D2CF6E /* Pets */,
 				4B63ABF6250257BD00D2CF6E /* Favourites */,
 			);
@@ -313,6 +318,7 @@
 			isa = PBXGroup;
 			children = (
 				4BB6202E2506165300063BE7 /* BackgroundShadow.swift */,
+				4BB6203225065DEB00063BE7 /* ErrorViewModifier.swift */,
 			);
 			path = Modifiers;
 			sourceTree = "<group>";
@@ -456,7 +462,9 @@
 				4BB6202F2506165300063BE7 /* BackgroundShadow.swift in Sources */,
 				4BAB0C7D2500D288002EB709 /* PetRequest.swift in Sources */,
 				4B63ABF4250250CF00D2CF6E /* Pet+Extension.swift in Sources */,
+				4BB6203325065DEB00063BE7 /* ErrorViewModifier.swift in Sources */,
 				4B2E9C9925021D5F00DF2B31 /* PetImageView.swift in Sources */,
+				4BB6203125065DA300063BE7 /* ErrorView.swift in Sources */,
 				4B63ABFE25026BF200D2CF6E /* FavouritePetsView.swift in Sources */,
 				4BAB0CA5250114E7002EB709 /* Environment+Extension.swift in Sources */,
 				4B87AA1325021B44006D3212 /* URLSession+Extension.swift in Sources */,

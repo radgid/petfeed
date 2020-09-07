@@ -15,6 +15,12 @@ struct MainView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @State private var selection = 0
     @Environment(\.imageCache) var cache: ImageCache
+    @State private var errorMessage = "" {
+        didSet {
+            isError = !errorMessage.isEmpty
+        }
+    }
+    @State private var isError = false
 
     // MARK: - Subviews
     var tabView: some View {
@@ -35,7 +41,25 @@ struct MainView: View {
                     Text("Favourites")
                 }
             }.tag(1)
-        }
+        }.onReceive(self.store.$state, perform: { state in
+            if let failure = state.failure {
+                self.errorMessage = failure.localizedDescription
+            } else {
+                self.errorMessage = ""
+            }
+        })
+        .overlay(ZStack {
+            if self.isError {
+                ErrorView(errorMessage: $errorMessage.wrappedValue,
+                          isError: $isError)
+                    .transition(.asymmetric(insertion: .move(edge: .top),
+                                            removal: .move(edge: .top)))
+                    .animation(.easeInOut(duration: 0.2))
+                    .zIndex(0)
+            } else {
+                EmptyView()
+            }
+        }, alignment: .top)
     }
 
     // MARK: - Body

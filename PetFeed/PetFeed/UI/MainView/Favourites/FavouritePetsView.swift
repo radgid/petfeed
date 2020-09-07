@@ -30,5 +30,9 @@ struct FavouritePetsView: View {
 struct FavouritePetsView_Previews: PreviewProvider {
     static var previews: some View {
         FavouritePetsView()
+            .environmentObject(Settings.storeMock)
+            .onAppear {
+                Settings.storeMock.send(.fetchFavourite(page: 1))
+        }.environment(\.colorScheme, .dark)
     }
 }

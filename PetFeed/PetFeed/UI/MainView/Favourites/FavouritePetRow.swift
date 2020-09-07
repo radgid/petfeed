@@ -27,8 +27,9 @@ struct FavouritePetRow: View {
         }, label: { Image(systemName: "heart.fill")
             .font(.body)
             .foregroundColor(.accentColor)
-            .padding()}).buttonStyle(BorderlessButtonStyle()), alignment: .bottomTrailing)
-            .background(Color.gray.opacity(0.1))
+            .padding()})
+            .buttonStyle(BorderlessButtonStyle()), alignment: .bottomTrailing)
+            .background(Color(.systemFill))
             .cornerRadius(8)
     }
 
@@ -43,5 +44,6 @@ struct FavouritePetRowView_Previews: PreviewProvider {
     static var previews: some View {
         FavouritePetRow(pet: DisplayablePet(id: "test",
                                                 image: PetApiMock().petImage()))
+            .environment(\.colorScheme, .dark)
     }
 }

@@ -37,7 +37,7 @@ struct PetRow: View {
                 .foregroundColor(favColor)
                 .padding()})
                 .buttonStyle(BorderlessButtonStyle()), alignment: .bottomTrailing)
-                .background(Color.gray.opacity(0.1))
+                .background(Color(.systemFill))
                 .cornerRadius(8)
         }.onReceive(self.store.$state) { state in
             if let updatedPet = state.updatedPet,
