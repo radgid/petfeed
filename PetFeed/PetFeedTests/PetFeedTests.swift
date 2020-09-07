@@ -67,6 +67,69 @@ class PetFeedTests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
 
+    func testFetchAction() throws {
+        //given
+        let store = Settings.storeMock
+        //when
+        store.send(.fetch(page: 1))
+        var sinkCount = 0
+        //then
+        let exp = XCTestExpectation(description: "Test Fetch Action")
+        let subscription = store.$state.sink { state in
+            if sinkCount == 1 {
+                XCTAssertNotNil(state.fetchResult, "Fetch action should set the results into the App")
+                exp.fulfill()
+            }
+            sinkCount += 1
+        }
+        
+        XCTAssertNotNil(subscription)
+
+        wait(for: [exp], timeout: 2.0)
+    }
+    
+    func testFetchFavouriteAction() throws {
+        //given
+        let store = Settings.storeMock
+        //when
+        store.send(.fetchFavourite(page: 1))
+        let exp = XCTestExpectation(description: "Test Fetch Favourite Action")
+        //then
+        var sinkCount = 0
+        let subscription = store.$state.sink { state in
+            if sinkCount == 1 {
+                XCTAssertFalse(state.fetchFavouriteResult.isEmpty, "Fetch Favourite action should set the results into the App")
+                exp.fulfill()
+            }
+            sinkCount += 1
+        }
+        
+        XCTAssertNotNil(subscription)
+
+        wait(for: [exp], timeout: 2.0)
+    }
+    
+    func testSetPetAction() throws {
+        //given
+        let store = Settings.storeMock
+        //when
+        let exp = XCTestExpectation(description: "Test Set Pet Action")
+        store.send(.updatePet(Pet("test", isFavourite: true), favourite: false))
+        //then
+        var sinkCount = 0
+        let subscription = store.$state.sink { state in
+            if sinkCount == 1 {
+                XCTAssertNotNil(state.updatedPet, "Update pet action should set the updatedPet into the App")
+                exp.fulfill()
+            }
+            sinkCount += 1
+        }
+        
+        XCTAssertNotNil(subscription)
+
+        wait(for: [exp], timeout: 2.0)
+    }
+    
     func testPetDecoding() throws {
         //given
         let jsonString = #"""
@@ -105,7 +168,7 @@ class PetFeedTests: XCTestCase {
         }
         //when
         let exp = XCTestExpectation(description: "Test Fetch")
-        let request = PetRequest(count: 4)
+        let request = ShibeRequest(count: 4)
         let subscription = petApi.fetch(request).sink(receiveCompletion: { completion in
             if case .failure = completion {
                 XCTFail("Pet fetch should succeed")
@@ -117,7 +180,7 @@ class PetFeedTests: XCTestCase {
         })
         XCTAssertNotNil(subscription)
 
-        wait(for: [exp], timeout: 110.0)
+        wait(for: [exp], timeout: 1.0)
     }
 
     func testPetFetchError() throws {
@@ -136,7 +199,7 @@ class PetFeedTests: XCTestCase {
         }
         //when
         let exp = XCTestExpectation(description: "Test Fetch")
-        let request = PetRequest(count: 4)
+        let request = ShibeRequest(count: 4)
         let subscription = petApi.fetch(request).sink(receiveCompletion: { completion in
             if case .failure(let error) = completion {
                 //then

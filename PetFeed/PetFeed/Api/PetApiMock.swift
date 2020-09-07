@@ -53,6 +53,6 @@ struct PetApiMock: PetRepository {
     func setPet(_ pet: Pet,
                 image: Data? = nil,
                 favourite: Bool) -> AnyPublisher<Pet, PetFailure> {
-        return .fail(.invalidRequest)
+        return .future(pet)
     }
 }

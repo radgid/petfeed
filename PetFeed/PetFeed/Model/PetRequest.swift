@@ -21,7 +21,7 @@ protocol PetRequest: Encodable {
     func api() -> String
 }
 
-struct ShibeRequest: PetRequest, Encodable {
+struct ShibeRequest: PetRequest {
     let count: Int
     let urls: Bool? = true
     let httpsUrls: Bool? = true
@@ -30,7 +30,7 @@ struct ShibeRequest: PetRequest, Encodable {
     }
 }
 
-struct CatRequest: PetRequest, Encodable {
+struct CatRequest: PetRequest {
     let count: Int
     let urls: Bool? = true
     let httpsUrls: Bool? = true
@@ -39,7 +39,7 @@ struct CatRequest: PetRequest, Encodable {
     }
 }
 
-struct BirdRequest: PetRequest, Encodable {
+struct BirdRequest: PetRequest {
     let count: Int
     let urls: Bool? = true
     let httpsUrls: Bool? = true
