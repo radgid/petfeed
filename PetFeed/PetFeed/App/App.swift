@@ -11,7 +11,7 @@ import Combine
 
 /// Constants used throughout the App
 struct Constants {
-    static let pageSize = 100
+    static let pageSize = 50
     //TODO: Paging to be considered - at the moment the Mock Pet server does not preserve any kind of sort so paging makes only sence
     // in terms of loading batches of data as oposed to sorted data
 }
@@ -59,7 +59,7 @@ func appReducer(state: inout AppState,
     case let .setUpdatedPet(pet):
         state.updatedPet = pet
     case let .fetch(page):
-        let request = PetRequest(count: Constants.pageSize * page)
+        let request = ShibeRequest(count: Constants.pageSize * page)
         return environment.service
             .fetch(request)
             .replaceError(with: [])

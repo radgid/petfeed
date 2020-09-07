@@ -20,8 +20,7 @@ struct FavouritePetRow: View {
                 .aspectRatio(contentMode: .fit)
                 .frame(height: 180)
                 .padding()
-                .shadow(color: Color.white.opacity(0.9), radius: 10, x: -10, y: -10)
-                .shadow(color: Color.gray.opacity(0.5), radius: 14, x: 14, y: 14)
+                .modifier(BackgroundShadow())
             Spacer()
         }.overlay(Button(action: {
             self.toggleFavourite()

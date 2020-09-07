@@ -8,13 +8,42 @@
 
 import Foundation
 
-public struct PetRequest: Encodable {
-    public let count: Int
-    public let urls: Bool?
-    public let httpsUrls: Bool?
-    public init(count: Int, urls: Bool? = true, httpsUrls: Bool = true) {
-        self.count = count
-        self.urls = urls
-        self.httpsUrls = httpsUrls
+enum PetType: String {
+    case shibes = "shibes"
+    case cats = "cats"
+    case birds = "birds"
+}
+
+protocol PetRequest: Encodable {
+    var count: Int {get}
+    var urls: Bool? {get}
+    var httpsUrls: Bool? {get}
+    func api() -> String
+}
+
+struct ShibeRequest: PetRequest, Encodable {
+    let count: Int
+    let urls: Bool? = true
+    let httpsUrls: Bool? = true
+    func api() -> String {
+        return PetType.shibes.rawValue
+    }
+}
+
+struct CatRequest: PetRequest, Encodable {
+    let count: Int
+    let urls: Bool? = true
+    let httpsUrls: Bool? = true
+    func api() -> String {
+        return PetType.cats.rawValue
+    }
+}
+
+struct BirdRequest: PetRequest, Encodable {
+    let count: Int
+    let urls: Bool? = true
+    let httpsUrls: Bool? = true
+    func api() -> String {
+        return PetType.birds.rawValue
     }
 }

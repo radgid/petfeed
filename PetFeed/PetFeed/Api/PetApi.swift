@@ -22,7 +22,7 @@ protocol PetRepository {
 struct PetApi: PetRepository {
     private let sessionConfiguration: URLSessionConfiguration
     private let managedObjectContext: NSManagedObjectContext
-    private let host: String = "https://shibe.online/api/shibes"
+    private let host: String = "https://shibe.online/api/"
     init(sessionConfiguration: URLSessionConfiguration = .default,
          managedObjectContext: NSManagedObjectContext) {
         self.sessionConfiguration = sessionConfiguration
@@ -78,7 +78,7 @@ struct PetApi: PetRepository {
     /// - Returns: Pets details publisher
     func fetch(_ request: PetRequest) -> AnyPublisher<[Pet], PetFailure> {
         guard let urlQuery = request.urlQueryString(),
-            let url = URL(string: host + "?" + urlQuery) else {
+            let url = URL(string: host + request.api() + "?" + urlQuery) else {
                 return .fail(.invalidRequest)
         }
 
