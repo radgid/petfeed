@@ -23,9 +23,10 @@ struct ScrollOffsetPreferenceKey: PreferenceKey {
 
 struct PetsView: View {
     @Environment(\.imageCache) var cache: ImageCache
+    @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var store: AppStore
     @State private var pets: [Pet] = []
-    @State private var isPresented: Bool = false
+    @State private var isPresented: Bool = false 
     @State private var selection: Pet? {
         didSet {
             if let selectedPet = selection {
@@ -91,7 +92,9 @@ struct PetsView: View {
                                         .onTapGesture {
                                             self.selection = pet
                                             self.isPresented.toggle()}
-                                        .sheet(isPresented: self.$isPresented) {
+                                        .sheet(isPresented: self.$isPresented, onDismiss: {
+                                            Notification.send(name: .didDismissPetDetail)
+                                        }) {
                                             //TODO: show the backdrop to soften the popup appearance
                                             if self.selection != nil {
                                                 PetImageView()

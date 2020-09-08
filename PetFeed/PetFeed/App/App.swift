@@ -15,7 +15,7 @@ struct Constants {
     static let pageSize = 50
     //TODO: Paging to be considered - at the moment the Mock Pet server does not preserve any kind of sort so paging makes only sence
     // in terms of loading batches of data as oposed to sorted data
-    static let pullToRefreshOffset = CGFloat(100.0)
+    static let pullToRefreshOffset = CGFloat(120.0)
 }
 
 /// Settings used throughout the App

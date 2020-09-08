@@ -103,8 +103,7 @@ struct PetApi: PetRepository {
     /// - Parameter request: Request details for fetching pets
     /// - Returns: Pets details publisher
     func fetch(_ request: PetRequest) -> AnyPublisher<[Pet], PetFailure> {
-        guard let urlQuery = request.urlQueryString(),
-            let url = URL(string: host + request.api() + "?" + urlQuery) else {
+        guard let url = URL(string: host + request.api() + "?" + "count=\(request.count)") else {
                 return .fail(.invalidRequest)
         }
 

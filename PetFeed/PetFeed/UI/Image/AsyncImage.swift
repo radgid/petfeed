@@ -36,11 +36,18 @@ import SwiftUI
                     .aspectRatio(contentMode: .fit)
             } else {
                 placeholder?
+                    .font(.title)
                     .rotationEffect(.degrees(self.isSpinning ? 0 : 360))
                     .animation(Animation.easeInOut(duration:0.5).repeatForever(autoreverses: false))
             }
         }.onAppear {
             self.isSpinning.toggle()
+        }
+    }
+    
+    func refreshIfNeeded() {
+        if loader.image == nil {
+            loader.load()
         }
     }
 }

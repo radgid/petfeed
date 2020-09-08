@@ -18,14 +18,13 @@ struct PetRow: View {
         return pet.isFavourite ? .accentColor : .gray
     }
 
+    @State var asyncImage: AsyncImage<Image>?
+    
     var body: some View {
         ZStack {
             HStack(alignment: .center) {
                 Spacer()
-                AsyncImage(url: URL(string: pet.url),
-                           placeholder: Image(systemName: "hourglass").font(.title),
-                           cache: self.cache,
-                           service: store.environment.service)
+                    asyncImage
                     .frame(height: 180)
                     .padding()
                     .modifier(BackgroundShadow())
@@ -44,6 +43,17 @@ struct PetRow: View {
                 updatedPet.url == self.pet.url {
                     self.pet = updatedPet
             }
+        }.onReceive(NotificationCenter.default.publisher(for:
+            Notification.Name.didDismissPetDetail)) { _ in
+                DispatchQueue.main.async {
+                    self.asyncImage?.refreshIfNeeded()
+                }
+        }.onAppear {
+            self.asyncImage =
+                AsyncImage(url: URL(string: self.pet.url),
+                           placeholder: Image(systemName: "hourglass"),
+                           cache: self.cache,
+                           service: self.store.environment.service)
         }
     }
 
