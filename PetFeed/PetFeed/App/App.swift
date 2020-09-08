@@ -38,6 +38,7 @@ final class AppState: ObservableObject {
     @Published var fetchFavouriteResult: [DisplayablePet] = []
     @Published var updatedPet: Pet?
     @Published var failure: PetFailure?
+    @Published var selectedPet: Pet?
 }
 
 /// App Actions
@@ -49,6 +50,8 @@ enum AppAction {
     case updatePet(_ pet: Pet, image: Data? = nil, favourite: Bool)
     case setUpdatedPet(pet: Pet)
     case setFailure(_ failure: PetFailure)
+    case select(pet: Pet)
+    case setSelectedPet(pet: Pet)
 }
 
 /// Reducer to get the next action from the current state and current action
@@ -62,9 +65,9 @@ func appReducer(state: inout AppState,
         state.fetchFavouriteResult = pets
     case let .setUpdatedPet(pet):
         state.updatedPet = pet
-//        if let petIndex = state.fetchResult.firstIndex(where: {$0.url == pet.url}) {
-//            state.fetchResult[petIndex] = pet
-//        }
+        //        if let petIndex = state.fetchResult.firstIndex(where: {$0.url == pet.url}) {
+        //            state.fetchResult[petIndex] = pet
+    //        }
     case let .setFailure(failure):
         state.failure = failure
     case let .fetch(page):
@@ -75,7 +78,7 @@ func appReducer(state: inout AppState,
             .map {AppAction.setFetchResult(pets: $0)}
             .catch{failure -> AnyPublisher<AppAction, Never> in
                 .just( AppAction.setFailure(failure))
-            }.eraseToAnyPublisher()
+        }.eraseToAnyPublisher()
     case let .fetchFavourite(page):
         //TODO: Consider creating case specific reducers to reduce the complexity of Switch statement
         return environment.service
@@ -83,7 +86,7 @@ func appReducer(state: inout AppState,
             .map {AppAction.setFetchFavouriteResult(pets: $0)}
             .catch{failure -> AnyPublisher<AppAction, Never> in
                 .just( AppAction.setFailure(failure))
-            }.eraseToAnyPublisher()
+        }.eraseToAnyPublisher()
     case let .updatePet(pet, image, favourite):
         //TODO: Consider creating case specific reducers to reduce the complexity of Switch statement
         return environment.service
@@ -91,8 +94,16 @@ func appReducer(state: inout AppState,
             .replaceError(with: pet)
             .map { AppAction.setUpdatedPet(pet: $0)}
             .eraseToAnyPublisher()
+    case let .select(pet):
+        return environment.service
+            .selectPet(pet)
+            .replaceError(with: pet)
+            .map { AppAction.setSelectedPet(pet: $0)}
+            .eraseToAnyPublisher()
+    case let .setSelectedPet(pet):
+        state.selectedPet = pet
     }
-
+    
     return Empty().eraseToAnyPublisher()
 }
 

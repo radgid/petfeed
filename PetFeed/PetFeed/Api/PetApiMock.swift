@@ -13,6 +13,15 @@ import SwiftUI
 
 /// Pet API Mock - used in Unit Tests as well as SwiftUi Previews
 struct PetApiMock: PetRepository {
+    var cache = TemporaryImageCache()
+    
+    init() {
+        if let image = petUIImage(),
+            let url = URL(string:"dog1.jpg"){
+            cache[url] = image
+        }
+    }
+    
     func fetch(_ request: PetRequest) -> AnyPublisher<[Pet], PetFailure> {
         let pets = ["https://dog1.jpg", "https://dog2.jpg", "https://dog3.jpg"].map {Pet.init($0, isFavourite: false)}
         return .future(pets)
@@ -32,6 +41,19 @@ struct PetApiMock: PetRepository {
         return .future(pets)
     }
 
+    func selectPet(_ pet: Pet) -> AnyPublisher<Pet, PetFailure> {
+        .future(pet)
+    }
+    
+    func petUIImage() -> UIImage? {
+        if let path = Bundle.main.path(forResource: "dog1", ofType: "jpg") {
+            if let data = try? Data(contentsOf: URL(fileURLWithPath: path)) {
+                return UIImage(data: data)
+            }
+        }
+        return UIImage(systemName: "hourglass")
+    }
+    
     func petImageData() -> Data? {
         if let path = Bundle.main.path(forResource: "dog1", ofType: "jpg") {
             if let data = try? Data(contentsOf: URL(fileURLWithPath: path)) {

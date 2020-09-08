@@ -16,6 +16,7 @@ protocol PetRepository {
     func download(_ imageUrl: URL) -> AnyPublisher<Data, PetFailure>
     func fetchFavourites(page: Int) -> AnyPublisher<[DisplayablePet], PetFailure>
     func setPet(_ pet: Pet, image: Data?, favourite: Bool) -> AnyPublisher<Pet, PetFailure>
+    func selectPet(_ pet: Pet) -> AnyPublisher<Pet, PetFailure>
 }
 
 /// Pet API
@@ -28,7 +29,9 @@ struct PetApi: PetRepository {
         self.sessionConfiguration = sessionConfiguration
         self.managedObjectContext = managedObjectContext
     }
-
+    
+    /// Helper function to fetch Favourite Pet ids
+    /// - Returns: Favorite Pet Ids
     func fetchFavouritesIds() -> [String] {
         let fetchRequest =
             NSFetchRequest<NSDictionary>(entityName: "FavouritePet")
@@ -45,6 +48,29 @@ struct PetApi: PetRepository {
             Log.data().error(message: "Could not fetch. \(error), \(error.userInfo)")
             return []
         }
+    }
+    
+    /// Select Pet - if it is stored in Faviourites Pets then change its flag accordingly
+    /// - Parameter pet: Pet to select
+    /// - Returns: Selected Pet
+    func selectPet(_ pet: Pet) -> AnyPublisher<Pet, PetFailure> {
+        
+        let fetchRequest =
+            NSFetchRequest<NSFetchRequestResult>(entityName: "FavouritePet")
+        fetchRequest.predicate = NSPredicate(format: "url = %@", pet.url)
+        
+        do {
+            if let petsMO = try managedObjectContext.fetch(fetchRequest) as? [FavouritePet] {
+                if let favPet = petsMO.first {
+                    return .future(Pet(favPet.url ?? "", isFavourite: true))
+                }
+            }
+            return .future(Pet(pet.url, isFavourite: false))
+        } catch let error as NSError {
+            Log.data().error(message: "Could not fetch. \(error), \(error.userInfo)")
+            return .fail(.databaseError(error: error))
+            }
+        
     }
     
     /// Fetch stored - favourite - Pet Images

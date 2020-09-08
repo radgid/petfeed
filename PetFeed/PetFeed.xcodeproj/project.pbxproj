@@ -273,6 +273,7 @@
 				4BAB0CA4250114E7002EB709 /* Environment+Extension.swift */,
 				4B87AA1225021B44006D3212 /* URLSession+Extension.swift */,
 				4B63ABFB2502685100D2CF6E /* Data+Extension.swift */,
+				4B63ABF3250250CF00D2CF6E /* Pet+Extension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -300,7 +301,6 @@
 				4BAB0CA225010EF8002EB709 /* AsyncImage.swift */,
 				4BAB0C9D25010CEB002EB709 /* ImageCache.swift */,
 				4BAB0CA025010D88002EB709 /* ImageLoader.swift */,
-				4B63ABF3250250CF00D2CF6E /* Pet+Extension.swift */,
 			);
 			path = Image;
 			sourceTree = "<group>";

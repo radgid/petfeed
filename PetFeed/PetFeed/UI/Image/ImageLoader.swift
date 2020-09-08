@@ -65,9 +65,7 @@ class ImageLoader: ObservableObject {
     }
 
     func cancel() {
-//        for cancellable in bag {
-            cancellable?.cancel()
-//        }
+        cancellable?.cancel()
     }
 
     private func onStart() {

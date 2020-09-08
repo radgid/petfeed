@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct FavouritePetRow: View {
-    let pet: DisplayablePet
+    @State var pet: DisplayablePet
     @EnvironmentObject var store: AppStore
 
     var body: some View {

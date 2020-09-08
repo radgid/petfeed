@@ -57,3 +57,10 @@ struct PetRow: View {
         store.send(.updatePet(pet, image: imageData, favourite: !pet.isFavourite))
     }
 }
+
+struct PetRowView_Previews: PreviewProvider {
+    static var previews: some View {
+        PetRow(pet: Pet("dog1.jpg", isFavourite: false))
+            .environmentObject(Settings.storeMock)
+    }
+}

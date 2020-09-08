@@ -26,7 +26,13 @@ struct PetsView: View {
     @EnvironmentObject var store: AppStore
     @State private var pets: [Pet] = []
     @State private var isPresented: Bool = false
-    @State private var selection: Pet?
+    @State private var selection: Pet? {
+        didSet {
+            if let selectedPet = selection {
+                store.send(.select(pet: selectedPet))
+            }
+        }
+    }
     private var fetchRequest = PassthroughSubject<CGFloat, Never>()
     @State private var cancellable: AnyCancellable?
     @State private var offsetY: CGFloat = 0.0 {
@@ -34,7 +40,7 @@ struct PetsView: View {
             if offsetY > Constants.pullToRefreshOffset {
                 isShowPullToRefresh = true
                 cancellable = fetchRequest.debounce(for: .seconds(1),
-                                scheduler: RunLoop.current)
+                                                    scheduler: RunLoop.current)
                     .removeDuplicates()
                     .sink { _ in
                         self.fetch()
@@ -57,7 +63,7 @@ struct PetsView: View {
                 .font(.caption)
                 .foregroundColor(Color(.systemBlue))
         }.opacity(self.isShowPullToRefresh ? 1 : 0)
-        .animation(Animation.easeIn(duration:0.3))
+            .animation(Animation.easeIn(duration:0.3))
     }
     
     @State private var isShowPullToRefresh: Bool = false
@@ -68,6 +74,9 @@ struct PetsView: View {
                 NoDataFoundView()
             } else {
                 ZStack(alignment: .top){
+//                    Color.black.edgesIgnoringSafeArea(.all)
+//                        .opacity(isPresented ? 1.0 : 0.0)
+//                        .animation(.default)
                     self.pullToRefreshView
                     GeometryReader { outsideGeo in
                         ScrollView(.vertical) {
@@ -85,8 +94,7 @@ struct PetsView: View {
                                         .sheet(isPresented: self.$isPresented) {
                                             //TODO: show the backdrop to soften the popup appearance
                                             if self.selection != nil {
-                                                //TODO: change the dependency injection to the store action in order to eliminate UI glitches when reloading the RowView
-                                                PetImageView(petImage: self.selection!.image(from: self.cache), pet: self.selection!)
+                                                PetImageView()
                                                     .environmentObject(self.store)
                                             } else {
                                                 EmptyView()
@@ -115,6 +123,7 @@ struct PetsView_Previews: PreviewProvider {
     static var previews: some View {
         PetsView()
             .environmentObject(Settings.storeMock)
+            .environment(\.imageCache, PetApiMock().cache)
             .onAppear {
                 Settings.storeMock.send(.fetch(page: 1))
         }
