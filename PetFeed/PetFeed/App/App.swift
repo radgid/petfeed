@@ -8,12 +8,14 @@
 
 import Foundation
 import Combine
+import CoreGraphics
 
 /// Constants used throughout the App
 struct Constants {
     static let pageSize = 50
     //TODO: Paging to be considered - at the moment the Mock Pet server does not preserve any kind of sort so paging makes only sence
     // in terms of loading batches of data as oposed to sorted data
+    static let pullToRefreshOffset = CGFloat(100.0)
 }
 
 /// Settings used throughout the App
@@ -31,11 +33,11 @@ struct PetEnvironment {
 }
 
 /// Global AppState
-struct AppState {
-    var fetchResult: [Pet] = []
-    var fetchFavouriteResult: [DisplayablePet] = []
-    var updatedPet: Pet?
-    var failure: PetFailure?
+final class AppState: ObservableObject {
+    @Published var fetchResult: [Pet] = []
+    @Published var fetchFavouriteResult: [DisplayablePet] = []
+    @Published var updatedPet: Pet?
+    @Published var failure: PetFailure?
 }
 
 /// App Actions
@@ -66,6 +68,7 @@ func appReducer(state: inout AppState,
     case let .setFailure(failure):
         state.failure = failure
     case let .fetch(page):
+        //TODO: Consider creating case specific reducers to reduce the complexity of Switch statement
         let request = ShibeRequest(count: Constants.pageSize * page)
         return environment.service
             .fetch(request)
@@ -74,6 +77,7 @@ func appReducer(state: inout AppState,
                 .just( AppAction.setFailure(failure))
             }.eraseToAnyPublisher()
     case let .fetchFavourite(page):
+        //TODO: Consider creating case specific reducers to reduce the complexity of Switch statement
         return environment.service
             .fetchFavourites(page: page)
             .map {AppAction.setFetchFavouriteResult(pets: $0)}
@@ -81,6 +85,7 @@ func appReducer(state: inout AppState,
                 .just( AppAction.setFailure(failure))
             }.eraseToAnyPublisher()
     case let .updatePet(pet, image, favourite):
+        //TODO: Consider creating case specific reducers to reduce the complexity of Switch statement
         return environment.service
             .setPet(pet, image: image, favourite: favourite)
             .replaceError(with: pet)

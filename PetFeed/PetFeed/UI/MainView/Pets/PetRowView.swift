@@ -39,8 +39,8 @@ struct PetRow: View {
                 .buttonStyle(BorderlessButtonStyle()), alignment: .bottomTrailing)
                 .background(Color(.systemFill))
                 .cornerRadius(8)
-        }.onReceive(self.store.$state) { state in
-            if let updatedPet = state.updatedPet,
+        }.onReceive(self.store.state.$updatedPet) { updatedPet in
+            if let updatedPet = updatedPet,
                 updatedPet.url == self.pet.url {
                     self.pet = updatedPet
             }

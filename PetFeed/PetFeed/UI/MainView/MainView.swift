@@ -41,8 +41,8 @@ struct MainView: View {
                     Text("Favourites")
                 }
             }.tag(1)
-        }.onReceive(self.store.$state, perform: { state in
-            if let failure = state.failure {
+        }.onReceive(self.store.state.$failure, perform: { failure in
+            if let failure = failure {
                 self.errorMessage = failure.localizedDescription
             } else {
                 self.errorMessage = ""

@@ -40,8 +40,8 @@ struct PetImageView: View {
                 .foregroundColor(favColor)
                 .padding()}).buttonStyle(BorderlessButtonStyle()),
                      alignment: .bottomTrailing)
-        }.onReceive(self.store.$state) { state in
-            if let updatedPet = state.updatedPet,
+        }.onReceive(self.store.state.$updatedPet) { updatedPet in
+            if let updatedPet = updatedPet,
                 updatedPet.url == self.pet.url {
                     self.pet = updatedPet
             }

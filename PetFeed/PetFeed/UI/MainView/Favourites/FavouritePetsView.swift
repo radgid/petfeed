@@ -13,20 +13,21 @@ struct FavouritePetsView: View {
     @EnvironmentObject var store: AppStore
     
     var body: some View {
+        
         VStack {
             if pets.isEmpty {
                 NoDataFoundView()
             } else {
-                List {
-                    ForEach(Array(pets.enumerated()), id: \.element) { _, pet in
-                        VStack {
-                            FavouritePetRow(pet: pet)
-                        }
-                    }.animation(.easeInOut(duration: 4.0))
-                }.animation(nil)
+                ScrollView(.vertical) {
+                    ForEach(pets, id: \.id) { pet in
+                        FavouritePetRow(pet: pet)
+                            .padding(.horizontal)
+                            .padding(.bottom, 5)
+                    }
+                }.animation(.default)
             }
-        }.onReceive(self.store.$state) { state in
-            self.pets = state.fetchFavouriteResult
+        }.onReceive(self.store.state.$fetchFavouriteResult) { fetchFavouriteResult in
+            self.pets = fetchFavouriteResult
         }
     }
 }
