@@ -11,15 +11,19 @@ import SwiftUI
 struct FavouritePetsView: View {
     @State private var pets: [DisplayablePet] = []
     @EnvironmentObject var store: AppStore
-
+    
     var body: some View {
         VStack {
-            List {
-                ForEach(Array(pets.enumerated()), id: \.element) { _, pet in
-                    VStack {
-                        FavouritePetRow(pet: pet)
-                    }
-                }
+            if pets.isEmpty {
+                NoDataFoundView()
+            } else {
+                List {
+                    ForEach(Array(pets.enumerated()), id: \.element) { _, pet in
+                        VStack {
+                            FavouritePetRow(pet: pet)
+                        }
+                    }.animation(.easeInOut(duration: 4.0))
+                }.animation(nil)
             }
         }.onReceive(self.store.$state) { state in
             self.pets = state.fetchFavouriteResult

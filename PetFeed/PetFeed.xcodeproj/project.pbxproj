@@ -46,6 +46,7 @@
 		4BB6202F2506165300063BE7 /* BackgroundShadow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB6202E2506165300063BE7 /* BackgroundShadow.swift */; };
 		4BB6203125065DA300063BE7 /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB6203025065DA300063BE7 /* ErrorView.swift */; };
 		4BB6203325065DEB00063BE7 /* ErrorViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB6203225065DEB00063BE7 /* ErrorViewModifier.swift */; };
+		4BB6203625075BBF00063BE7 /* NoDataFoundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB6203525075BBF00063BE7 /* NoDataFoundView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -110,6 +111,7 @@
 		4BB6202E2506165300063BE7 /* BackgroundShadow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundShadow.swift; sourceTree = "<group>"; };
 		4BB6203025065DA300063BE7 /* ErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
 		4BB6203225065DEB00063BE7 /* ErrorViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorViewModifier.swift; sourceTree = "<group>"; };
+		4BB6203525075BBF00063BE7 /* NoDataFoundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoDataFoundView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -307,7 +309,8 @@
 			isa = PBXGroup;
 			children = (
 				4BAB0C492500C7DB002EB709 /* MainView.swift */,
-				4BB6203025065DA300063BE7 /* ErrorView.swift */,
+				4BB6203525075BBF00063BE7 /* NoDataFoundView.swift */,
+				4BB6203425075B5100063BE7 /* Other */,
 				4B63ABFF2503503C00D2CF6E /* Pets */,
 				4B63ABF6250257BD00D2CF6E /* Favourites */,
 			);
@@ -321,6 +324,14 @@
 				4BB6203225065DEB00063BE7 /* ErrorViewModifier.swift */,
 			);
 			path = Modifiers;
+			sourceTree = "<group>";
+		};
+		4BB6203425075B5100063BE7 /* Other */ = {
+			isa = PBXGroup;
+			children = (
+				4BB6203025065DA300063BE7 /* ErrorView.swift */,
+			);
+			path = Other;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -471,6 +482,7 @@
 				4BAB0C792500CD93002EB709 /* Pet.swift in Sources */,
 				4BAB0C9C2501082F002EB709 /* Store.swift in Sources */,
 				4BAB0C882500DDD1002EB709 /* ModelWrapper.swift in Sources */,
+				4BB6203625075BBF00063BE7 /* NoDataFoundView.swift in Sources */,
 				4BAB0C862500DB2F002EB709 /* Encodable+Extension.swift in Sources */,
 				4B63ABF825025F2700D2CF6E /* PetsView.swift in Sources */,
 				4BAB0C8A2500DE4F002EB709 /* OSLog+Extension.swift in Sources */,

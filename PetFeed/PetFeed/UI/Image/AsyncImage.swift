@@ -37,7 +37,7 @@ import SwiftUI
             } else {
                 placeholder?
                     .rotationEffect(.degrees(self.isSpinning ? 0 : 360))
-                    .animation(Animation.easeIn.repeatForever(autoreverses: false))
+                    .animation(Animation.easeInOut.repeatForever(autoreverses: false))
             }
         }.onAppear {
             self.isSpinning.toggle()

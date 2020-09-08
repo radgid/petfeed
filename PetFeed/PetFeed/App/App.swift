@@ -60,9 +60,9 @@ func appReducer(state: inout AppState,
         state.fetchFavouriteResult = pets
     case let .setUpdatedPet(pet):
         state.updatedPet = pet
-        if let petIndex = state.fetchResult.firstIndex(where: {$0.url == pet.url}) {
-            state.fetchResult[petIndex] = pet
-        }
+//        if let petIndex = state.fetchResult.firstIndex(where: {$0.url == pet.url}) {
+//            state.fetchResult[petIndex] = pet
+//        }
     case let .setFailure(failure):
         state.failure = failure
     case let .fetch(page):
