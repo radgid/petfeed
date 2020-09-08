@@ -76,7 +76,7 @@ class PetFeedTests: XCTestCase {
         //then
         let exp = XCTestExpectation(description: "Test Fetch Action")
         let subscription = store.$state.sink { state in
-            if sinkCount == 1 {
+            if sinkCount == 1 { // sink 0 is initial State
                 XCTAssertNotNil(state.fetchResult, "Fetch action should set the results into the App")
                 exp.fulfill()
             }
@@ -97,7 +97,7 @@ class PetFeedTests: XCTestCase {
         //then
         var sinkCount = 0
         let subscription = store.$state.sink { state in
-            if sinkCount == 1 {
+            if sinkCount == 1 {// sink 0 is initial State
                 XCTAssertFalse(state.fetchFavouriteResult.isEmpty, "Fetch Favourite action should set the results into the App")
                 exp.fulfill()
             }
@@ -118,7 +118,7 @@ class PetFeedTests: XCTestCase {
         //then
         var sinkCount = 0
         let subscription = store.$state.sink { state in
-            if sinkCount == 1 {
+            if sinkCount == 1 {// sink 0 is initial State
                 XCTAssertNotNil(state.updatedPet, "Update pet action should set the updatedPet into the App")
                 exp.fulfill()
             }

@@ -110,3 +110,13 @@ struct PetsView: View {
         store.send(.fetch(page:1))
     }
 }
+
+struct PetsView_Previews: PreviewProvider {
+    static var previews: some View {
+        PetsView()
+            .environmentObject(Settings.storeMock)
+            .onAppear {
+                Settings.storeMock.send(.fetch(page: 1))
+        }
+    }
+}
