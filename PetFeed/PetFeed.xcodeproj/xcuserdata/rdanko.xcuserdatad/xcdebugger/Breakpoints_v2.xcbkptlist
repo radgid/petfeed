@@ -7,70 +7,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "993CC6FD-29AA-4690-99A9-7F31E2664E7F"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "PetFeed/Api/PetApiMock.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "19"
-            endingLineNumber = "19"
-            landmarkName = "init()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "ABF983F0-D9F2-41D0-95F9-B7B867B029D7"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "PetFeed/Api/PetApiMock.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "26"
-            endingLineNumber = "26"
-            landmarkName = "fetch(_:)"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "ABF983F0-D9F2-41D0-95F9-B7B867B029D7 - 9489098b8c8dd556"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "PetFeed.PetApiMock.fetch(PetFeed.PetRequest) -&gt; Combine.AnyPublisher&lt;Swift.Array&lt;PetFeed.Pet&gt;, PetFeed.PetFailure&gt;"
-                  moduleName = "PetFeed"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/rdanko/repo/challenge/petfeed/PetFeed/PetFeed/Api/PetApiMock.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "26"
-                  endingLineNumber = "26"
-                  offsetFromSymbolStart = "69">
-               </Location>
-               <Location
-                  uuid = "ABF983F0-D9F2-41D0-95F9-B7B867B029D7 - de9a4d22911234e6"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.String) -&gt; PetFeed.Pet in PetFeed.PetApiMock.fetch(PetFeed.PetRequest) -&gt; Combine.AnyPublisher&lt;Swift.Array&lt;PetFeed.Pet&gt;, PetFeed.PetFailure&gt;"
-                  moduleName = "PetFeed"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/rdanko/repo/challenge/petfeed/PetFeed/PetFeed/Api/PetApiMock.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "26"
-                  endingLineNumber = "26"
-                  offsetFromSymbolStart = "23">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "6E167CF6-6F3B-41EA-A980-9AE73D223B21"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
@@ -162,6 +98,22 @@
             endingLineNumber = "75"
             landmarkName = "previews"
             landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "635DBF41-B0D7-4798-863D-1C2AF8F4D22D"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PetFeedTests/PetFeedTests.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "336"
+            endingLineNumber = "336"
+            landmarkName = "testImageLoaderDownloadSuccess()"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

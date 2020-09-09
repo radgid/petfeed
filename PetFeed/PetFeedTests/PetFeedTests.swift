@@ -8,6 +8,7 @@
 
 import XCTest
 import CoreData
+import Combine
 @testable import PetFeed
 
 struct Resource {
@@ -322,5 +323,28 @@ class PetFeedTests: XCTestCase {
 
         wait(for: [exp], timeout: 1.0)
     }
+    
+    func testImageLoaderDownloadSuccess() throws {
+        //given
+        let imageLoader = ImageLoader(url: URL(string: "dog1.jpg"), cache: nil, service: PetApiMock())
+        var sinkCount = 0
+        //when
+        let exp = XCTestExpectation(description: "Test Download")
+        imageLoader.load()
+            
+        let subscription = imageLoader.$image.eraseToAnyPublisher().sink { image in
+            if sinkCount == 1 {
+                //then
+                XCTAssertTrue(image != nil)
+                exp.fulfill()
+            }
+            sinkCount += 1
+        }
+        XCTAssertNotNil(subscription)
+
+        wait(for: [exp], timeout: 100.0)
+    }
+    
+    
 
 }
