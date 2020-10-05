@@ -33,7 +33,7 @@ class PetFeedExtensionTests: XCTestCase {
 
  func testPetUIImage() throws {
      //given
-     let pet = Pet("dog1.jpg", isFavourite: false)
+     let pet = Pet("https://dog1.jpg", isFavourite: false)
      //when
      let cache = PetApiMock().cache
      //then

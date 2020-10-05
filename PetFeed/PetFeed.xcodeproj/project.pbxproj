@@ -15,6 +15,14 @@
 		4B63ABFE25026BF200D2CF6E /* FavouritePetsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B63ABFD25026BF200D2CF6E /* FavouritePetsView.swift */; };
 		4B63AC012503507900D2CF6E /* FavouritePetRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B63AC002503507900D2CF6E /* FavouritePetRow.swift */; };
 		4B87AA1325021B44006D3212 /* URLSession+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B87AA1225021B44006D3212 /* URLSession+Extension.swift */; };
+		4B8ACFB125271EA2005E82EA /* PetState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B8ACFB025271EA2005E82EA /* PetState.swift */; };
+		4B8ACFB625271EDE005E82EA /* FavouritePetState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B8ACFB525271EDD005E82EA /* FavouritePetState.swift */; };
+		4B8ACFBB25271F19005E82EA /* ManagePetState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B8ACFBA25271F19005E82EA /* ManagePetState.swift */; };
+		4B8ACFC3252720A0005E82EA /* LocalPetApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B8ACFC2252720A0005E82EA /* LocalPetApi.swift */; };
+		4B8AD00A2528B8CB005E82EA /* PetImageModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B8AD0092528B8CB005E82EA /* PetImageModifier.swift */; };
+		4B8AD01E25299CA4005E82EA /* PreviewSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B8AD01D25299CA4005E82EA /* PreviewSupport.swift */; };
+		4B8AD02325299CC0005E82EA /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B8AD02225299CC0005E82EA /* Constants.swift */; };
+		4B8AD0422529A516005E82EA /* PullToRefresh.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B8AD0412529A516005E82EA /* PullToRefresh.swift */; };
 		4BAB0C432500C7DB002EB709 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAB0C422500C7DB002EB709 /* AppDelegate.swift */; };
 		4BAB0C452500C7DB002EB709 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAB0C442500C7DB002EB709 /* SceneDelegate.swift */; };
 		4BAB0C482500C7DB002EB709 /* PetFeed.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4BAB0C462500C7DB002EB709 /* PetFeed.xcdatamodeld */; };
@@ -25,7 +33,7 @@
 		4BAB0C5D2500C7DD002EB709 /* PetFeedTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAB0C5C2500C7DD002EB709 /* PetFeedTests.swift */; };
 		4BAB0C682500C7DD002EB709 /* PetFeedUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAB0C672500C7DD002EB709 /* PetFeedUITests.swift */; };
 		4BAB0C792500CD93002EB709 /* Pet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAB0C782500CD93002EB709 /* Pet.swift */; };
-		4BAB0C7B2500D242002EB709 /* PetApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAB0C7A2500D242002EB709 /* PetApi.swift */; };
+		4BAB0C7B2500D242002EB709 /* NetworkPetApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAB0C7A2500D242002EB709 /* NetworkPetApi.swift */; };
 		4BAB0C7D2500D288002EB709 /* PetRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAB0C7C2500D288002EB709 /* PetRequest.swift */; };
 		4BAB0C7F2500D332002EB709 /* PetFailure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAB0C7E2500D332002EB709 /* PetFailure.swift */; };
 		4BAB0C822500D421002EB709 /* Publisher+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAB0C812500D421002EB709 /* Publisher+Extension.swift */; };
@@ -76,6 +84,14 @@
 		4B63ABFD25026BF200D2CF6E /* FavouritePetsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouritePetsView.swift; sourceTree = "<group>"; };
 		4B63AC002503507900D2CF6E /* FavouritePetRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouritePetRow.swift; sourceTree = "<group>"; };
 		4B87AA1225021B44006D3212 /* URLSession+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLSession+Extension.swift"; sourceTree = "<group>"; };
+		4B8ACFB025271EA2005E82EA /* PetState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PetState.swift; sourceTree = "<group>"; };
+		4B8ACFB525271EDD005E82EA /* FavouritePetState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouritePetState.swift; sourceTree = "<group>"; };
+		4B8ACFBA25271F19005E82EA /* ManagePetState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagePetState.swift; sourceTree = "<group>"; };
+		4B8ACFC2252720A0005E82EA /* LocalPetApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalPetApi.swift; sourceTree = "<group>"; };
+		4B8AD0092528B8CB005E82EA /* PetImageModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PetImageModifier.swift; sourceTree = "<group>"; };
+		4B8AD01D25299CA4005E82EA /* PreviewSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewSupport.swift; sourceTree = "<group>"; };
+		4B8AD02225299CC0005E82EA /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		4B8AD0412529A516005E82EA /* PullToRefresh.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PullToRefresh.swift; sourceTree = "<group>"; };
 		4BAB0C3F2500C7DB002EB709 /* PetFeed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PetFeed.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4BAB0C422500C7DB002EB709 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4BAB0C442500C7DB002EB709 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -92,7 +108,7 @@
 		4BAB0C672500C7DD002EB709 /* PetFeedUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PetFeedUITests.swift; sourceTree = "<group>"; };
 		4BAB0C692500C7DD002EB709 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4BAB0C782500CD93002EB709 /* Pet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pet.swift; sourceTree = "<group>"; };
-		4BAB0C7A2500D242002EB709 /* PetApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PetApi.swift; sourceTree = "<group>"; };
+		4BAB0C7A2500D242002EB709 /* NetworkPetApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkPetApi.swift; sourceTree = "<group>"; };
 		4BAB0C7C2500D288002EB709 /* PetRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PetRequest.swift; sourceTree = "<group>"; };
 		4BAB0C7E2500D332002EB709 /* PetFailure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PetFailure.swift; sourceTree = "<group>"; };
 		4BAB0C812500D421002EB709 /* Publisher+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Publisher+Extension.swift"; sourceTree = "<group>"; };
@@ -152,6 +168,7 @@
 		4B63ABF6250257BD00D2CF6E /* Favourites */ = {
 			isa = PBXGroup;
 			children = (
+				4B8AD0082528B8A6005E82EA /* Modifiers */,
 				4B63ABFD25026BF200D2CF6E /* FavouritePetsView.swift */,
 				4B63AC002503507900D2CF6E /* FavouritePetRow.swift */,
 			);
@@ -162,10 +179,19 @@
 			isa = PBXGroup;
 			children = (
 				4B63ABF725025F2700D2CF6E /* PetsView.swift */,
+				4B8AD0412529A516005E82EA /* PullToRefresh.swift */,
 				4B63ABF925025F4D00D2CF6E /* PetRowView.swift */,
 				4B63ABF5250257A600D2CF6E /* PetDetail */,
 			);
 			path = Pets;
+			sourceTree = "<group>";
+		};
+		4B8AD0082528B8A6005E82EA /* Modifiers */ = {
+			isa = PBXGroup;
+			children = (
+				4B8AD0092528B8CB005E82EA /* PetImageModifier.swift */,
+			);
+			path = Modifiers;
 			sourceTree = "<group>";
 		};
 		4BAB0C362500C7DB002EB709 = {
@@ -248,7 +274,8 @@
 		4BAB0C762500CC0A002EB709 /* Api */ = {
 			isa = PBXGroup;
 			children = (
-				4BAB0C7A2500D242002EB709 /* PetApi.swift */,
+				4BAB0C7A2500D242002EB709 /* NetworkPetApi.swift */,
+				4B8ACFC2252720A0005E82EA /* LocalPetApi.swift */,
 				4BAB0C902500F0F7002EB709 /* PetApiMock.swift */,
 				4BAB0C832500D4BB002EB709 /* MockUrlProtocol.swift */,
 			);
@@ -293,7 +320,12 @@
 			isa = PBXGroup;
 			children = (
 				4BAB0C9225010357002EB709 /* App.swift */,
+				4B8AD02225299CC0005E82EA /* Constants.swift */,
 				4BAB0C97250104D6002EB709 /* Store.swift */,
+				4B8ACFB025271EA2005E82EA /* PetState.swift */,
+				4B8ACFB525271EDD005E82EA /* FavouritePetState.swift */,
+				4B8ACFBA25271F19005E82EA /* ManagePetState.swift */,
+				4B8AD01D25299CA4005E82EA /* PreviewSupport.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -312,7 +344,6 @@
 			isa = PBXGroup;
 			children = (
 				4BAB0C492500C7DB002EB709 /* MainView.swift */,
-				4BB6203525075BBF00063BE7 /* NoDataFoundView.swift */,
 				4BB6203425075B5100063BE7 /* Other */,
 				4B63ABFF2503503C00D2CF6E /* Pets */,
 				4B63ABF6250257BD00D2CF6E /* Favourites */,
@@ -332,6 +363,7 @@
 		4BB6203425075B5100063BE7 /* Other */ = {
 			isa = PBXGroup;
 			children = (
+				4BB6203525075BBF00063BE7 /* NoDataFoundView.swift */,
 				4BB6203025065DA300063BE7 /* ErrorView.swift */,
 			);
 			path = Other;
@@ -400,7 +432,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1170;
-				LastUpgradeCheck = 1170;
+				LastUpgradeCheck = 1200;
 				ORGANIZATIONNAME = "Danko, Radoslav";
 				TargetAttributes = {
 					4BAB0C3E2500C7DB002EB709 = {
@@ -470,27 +502,35 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4B8ACFB625271EDE005E82EA /* FavouritePetState.swift in Sources */,
 				4BAB0CA325010EF8002EB709 /* AsyncImage.swift in Sources */,
-				4BAB0C7B2500D242002EB709 /* PetApi.swift in Sources */,
+				4BAB0C7B2500D242002EB709 /* NetworkPetApi.swift in Sources */,
 				4BAB0C9E25010CEB002EB709 /* ImageCache.swift in Sources */,
 				4BB6202F2506165300063BE7 /* BackgroundShadow.swift in Sources */,
 				4BAB0C7D2500D288002EB709 /* PetRequest.swift in Sources */,
+				4B8ACFBB25271F19005E82EA /* ManagePetState.swift in Sources */,
 				4B63ABF4250250CF00D2CF6E /* Pet+Extension.swift in Sources */,
 				4BB6203325065DEB00063BE7 /* ErrorViewModifier.swift in Sources */,
 				4B2E9C9925021D5F00DF2B31 /* PetImageView.swift in Sources */,
 				4BB6203125065DA300063BE7 /* ErrorView.swift in Sources */,
+				4B8AD0422529A516005E82EA /* PullToRefresh.swift in Sources */,
 				4B63ABFE25026BF200D2CF6E /* FavouritePetsView.swift in Sources */,
+				4B8AD00A2528B8CB005E82EA /* PetImageModifier.swift in Sources */,
 				4BAB0CA5250114E7002EB709 /* Environment+Extension.swift in Sources */,
 				4B87AA1325021B44006D3212 /* URLSession+Extension.swift in Sources */,
+				4B8AD02325299CC0005E82EA /* Constants.swift in Sources */,
+				4B8AD01E25299CA4005E82EA /* PreviewSupport.swift in Sources */,
 				4BAE15B425080832006C0B81 /* Notification+Extension.swift in Sources */,
 				4BAB0C792500CD93002EB709 /* Pet.swift in Sources */,
 				4BAB0C9C2501082F002EB709 /* Store.swift in Sources */,
 				4BAB0C882500DDD1002EB709 /* ModelWrapper.swift in Sources */,
 				4BB6203625075BBF00063BE7 /* NoDataFoundView.swift in Sources */,
 				4B63ABF825025F2700D2CF6E /* PetsView.swift in Sources */,
+				4B8ACFC3252720A0005E82EA /* LocalPetApi.swift in Sources */,
 				4BAB0C8A2500DE4F002EB709 /* OSLog+Extension.swift in Sources */,
 				4BAB0C9325010357002EB709 /* App.swift in Sources */,
 				4BAB0CA125010D88002EB709 /* ImageLoader.swift in Sources */,
+				4B8ACFB125271EA2005E82EA /* PetState.swift in Sources */,
 				4B63ABFA25025F4D00D2CF6E /* PetRowView.swift in Sources */,
 				4BAB0C912500F0F7002EB709 /* PetApiMock.swift in Sources */,
 				4B63AC012503507900D2CF6E /* FavouritePetRow.swift in Sources */,
@@ -576,6 +616,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -636,6 +677,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;

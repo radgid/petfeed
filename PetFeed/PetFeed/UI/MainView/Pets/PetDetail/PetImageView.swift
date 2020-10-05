@@ -10,15 +10,26 @@ import SwiftUI
 
 struct PetImageView: View {
     @Environment(\.presentationMode) var presentationMode
-    @EnvironmentObject var store: AppStore
+    @EnvironmentObject var petStore: PetStore
+    @EnvironmentObject var managePetStore: ManagePetStore
     @Environment(\.imageCache) var cache: ImageCache
+    private var petUrl: String {
+        managePetStore.state.selectedPet?.url ?? ""
+    }
         
-    @State var pet: Pet?
+    private var pet: Pet? {
+        petStore.state.fetchResult.filter({$0.url == petUrl}).first
+    }
     
     private var petImage: some View {
-        pet?.image(from: cache)
-            .resizable()
-            .aspectRatio(contentMode: .fit)
+        VStack {
+            pet?.image(from: cache)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color.black)
+        .edgesIgnoringSafeArea(.all)
     }
 
     private var favColor: Color {
@@ -27,12 +38,7 @@ struct PetImageView: View {
 
     var body: some View {
         ZStack {
-            VStack {
-                petImage
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(Color.black)
-            .edgesIgnoringSafeArea(.all)
+            petImage
             .onTapGesture {
                 self.presentationMode.wrappedValue.dismiss()
             }
@@ -43,17 +49,6 @@ struct PetImageView: View {
                 .foregroundColor(favColor)
                 .padding()}).buttonStyle(BorderlessButtonStyle()),
                      alignment: .bottomTrailing)
-        }.onAppear {
-            self.pet = self.store.state.selectedPet
-        }
-        .onReceive(self.store.state.$selectedPet) { selectedPet in
-            self.pet = selectedPet
-        }
-        .onReceive(self.store.state.$updatedPet) { updatedPet in
-            if let updatedPet = updatedPet,
-                updatedPet.url == self.pet?.url {
-                    self.pet = updatedPet
-            }
         }
     }
     
@@ -66,16 +61,19 @@ struct PetImageView: View {
         if isFavourite {
             imageData = pet.uiImage(from: self.cache)?.jpegData(compressionQuality: 1.0)
         }
-        store.send(.updatePet(pet, image: imageData, favourite: !pet.isFavourite))
+        managePetStore.send(.updatePet(pet, image: imageData, favourite: !pet.isFavourite, petState: petStore.state))
     }
 }
 
 struct PetImageView_Previews: PreviewProvider {
     static var previews: some View {
         return PetImageView()
-            .environmentObject(Settings.storeMock)
+            .environmentObject(PreviewSupport.petStoreMock)
+            .environmentObject(PreviewSupport.managePetStoreMock)
+            .environment(\.imageCache, PetApiMock().cache)
             .onAppear {
-                Settings.storeMock.send(.select(pet: Pet("dog1.jpg", isFavourite: false)))
+                PreviewSupport.petStoreMock.send(.fetch(page: 1))
+                PreviewSupport.managePetStoreMock.send(.select(pet: Pet("https://dog1.jpg", isFavourite: false)))
             }
     }
 }

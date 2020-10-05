@@ -53,7 +53,7 @@ extension NSManagedObjectContext {
 
 class PetFeedTests: XCTestCase {
 
-    var petApi: PetApi!
+    var environment: PetEnvironment!
     let apiURL = URL(string: "https://shibe.online/api/shibes")!
     let context =  NSManagedObjectContext.contextForTests()
 
@@ -61,7 +61,10 @@ class PetFeedTests: XCTestCase {
         // Put setup code here. This method is called before the invocation of each test method in the class.
         let configuration = URLSessionConfiguration.default
         configuration.protocolClasses = [MockUrlProtocol.self]
-        petApi = PetApi(sessionConfiguration: configuration, managedObjectContext: context)
+        let localApi = LocalPetApi(managedObjectContext: context)
+        let networkApi = NetworkPetApi(localRepository: localApi)
+        environment = PetEnvironment(networkService: networkApi,
+                                     localService: localApi)
     }
 
     override func tearDownWithError() throws {
@@ -70,7 +73,7 @@ class PetFeedTests: XCTestCase {
 
     func testFetchAction() throws {
         //given
-        let store = Settings.storeMock
+        let store = PreviewSupport.petStoreMock
         //when
         store.send(.fetch(page: 1))
         var sinkCount = 0
@@ -91,15 +94,15 @@ class PetFeedTests: XCTestCase {
     
     func testFetchFavouriteAction() throws {
         //given
-        let store = Settings.storeMock
+        let store = PreviewSupport.favouritePetStoreMock
         //when
-        store.send(.fetchFavourite(page: 1))
+        store.send(.fetch(page: 1))
         let exp = XCTestExpectation(description: "Test Fetch Favourite Action")
         //then
         var sinkCount = 0
         let subscription = store.$state.sink { state in
             if sinkCount == 1 {// sink 0 is initial State
-                XCTAssertFalse(state.fetchFavouriteResult.isEmpty, "Fetch Favourite action should set the results into the App")
+                XCTAssertFalse(state.fetchResult.isEmpty, "Fetch Favourite action should set the results into the App")
                 exp.fulfill()
             }
             sinkCount += 1
@@ -112,10 +115,10 @@ class PetFeedTests: XCTestCase {
     
     func testSetPetAction() throws {
         //given
-        let store = Settings.storeMock
+        let store = PreviewSupport.managePetStoreMock
         //when
         let exp = XCTestExpectation(description: "Test Set Pet Action")
-        store.send(.updatePet(Pet("test", isFavourite: true), favourite: false))
+        store.send(.updatePet(Pet("test", isFavourite: true), favourite: false, petState: PreviewSupport.petStoreMock.state))
         //then
         var sinkCount = 0
         let subscription = store.$state.sink { state in
@@ -155,6 +158,12 @@ class PetFeedTests: XCTestCase {
 
     func testPetFetchSuccess() throws {
         //given
+        let localApi = LocalPetApi(managedObjectContext: context)
+        let sessionConfig = URLSessionConfiguration.default
+        sessionConfig.protocolClasses = [MockUrlProtocol.self]
+        let networkApi = NetworkPetApi(sessionConfiguration: sessionConfig, localRepository: localApi)
+        let mockedEnvironment = PetEnvironment(networkService: networkApi,
+                                     localService: localApi)
         let jsonString = #"""
             ["https://cdn.shibe.online/shibes/01ffe1d5c4fca383bcd389219055132d0783c2b6.jpg","https://cdn.shibe.online/shibes/79a12b495eadac635c74c21770c1e7f63e050ab1.jpg","https://cdn.shibe.online/shibes/288ff16fd6303f214f637946163617b2acac521c.jpg","https://cdn.shibe.online/shibes/74079100c8374fd88ac3e735d3c264d6f633dafc.jpg","https://cdn.shibe.online/shibes/4da0e01134cf69896ffc370f233e907fcca7a77f.jpg"]
             """#
@@ -170,7 +179,9 @@ class PetFeedTests: XCTestCase {
         //when
         let exp = XCTestExpectation(description: "Test Fetch")
         let request = ShibeRequest(count: 4)
-        let subscription = petApi.fetch(request).sink(receiveCompletion: { completion in
+        let subscription = mockedEnvironment
+            .networkService
+            .fetch(request).sink(receiveCompletion: { completion in
             if case .failure = completion {
                 XCTFail("Pet fetch should succeed")
             }
@@ -186,6 +197,13 @@ class PetFeedTests: XCTestCase {
 
     func testPetFetchError() throws {
         //given
+        let localApi = LocalPetApi(managedObjectContext: context)
+        let sessionConfig = URLSessionConfiguration.default
+        sessionConfig.protocolClasses = [MockUrlProtocol.self]
+        let networkApi = NetworkPetApi(sessionConfiguration: sessionConfig, localRepository: localApi)
+        let mockedEnvironment = PetEnvironment(networkService: networkApi,
+                                     localService: localApi)
+        
         let jsonString = #"""
             ["https:",,,]
             """#
@@ -201,7 +219,9 @@ class PetFeedTests: XCTestCase {
         //when
         let exp = XCTestExpectation(description: "Test Fetch")
         let request = ShibeRequest(count: 4)
-        let subscription = petApi.fetch(request).sink(receiveCompletion: { completion in
+        let subscription = mockedEnvironment
+            .networkService
+            .fetch(request).sink(receiveCompletion: { completion in
             if case .failure(let error) = completion {
                 //then
                 if case PetFailure.unwrapingError(_) = error {
@@ -224,7 +244,9 @@ class PetFeedTests: XCTestCase {
         let pet = Pet("test", isFavourite: false)
         //when
         let exp = XCTestExpectation(description: "Test Set Favourite Pet")
-        let subscription = petApi.setPet(pet, image: imageData, favourite: true)
+        let subscription = environment
+            .localService
+            .setPet(pet, image: imageData, favourite: true)
             .sink(receiveCompletion: { completion in
                 if case .failure = completion {
                     XCTFail("Pet Favourite save should succeed")
@@ -247,13 +269,17 @@ class PetFeedTests: XCTestCase {
         //when
         let exp = XCTestExpectation(description: "Test Fetch Local")
 
-        let subscription = petApi.setPet(pet, image: imageData, favourite: true)
+        let subscription = environment
+            .localService
+            .setPet(pet, image: imageData, favourite: true)
             .sink(receiveCompletion: { completion in
                 if case .failure = completion {
                     XCTFail("Pet Favourite save should succeed")
                 }
             }, receiveValue: { [weak self] _ in
-                _ = self?.petApi.fetchFavourites()
+                _ = self?.environment
+                    .localService
+                    .fetchFavourites(page: 1)
                     .sink(receiveCompletion: { completion in
                         if case .failure(_) = completion {
                             //then
@@ -277,14 +303,16 @@ class PetFeedTests: XCTestCase {
         //when
         let exp = XCTestExpectation(description: "Test Fetch Local")
 
-        let subscription = petApi.setPet(pet, image: imageData, favourite: true)
+        let subscription = environment
+            .localService
+            .setPet(pet, image: imageData, favourite: true)
             .sink(receiveCompletion: { completion in
                 if case .failure = completion {
                     XCTFail("Pet Favourite save should succeed")
                 }
             }, receiveValue: { [weak self] _ in
                 
-                let urls = self?.petApi.fetchFavouritesIds()
+                let urls = self?.environment.localService.fetchFavouritesIds()
                 XCTAssertFalse(urls?.isEmpty ?? false, "Local Favourite Pets URLS should not be empty")
                 exp.fulfill()
             })
@@ -309,7 +337,9 @@ class PetFeedTests: XCTestCase {
         }
         //when
         let exp = XCTestExpectation(description: "Test Download")
-        let subscription = petApi.download(self.apiURL)
+        let subscription = environment
+            .networkService
+            .download(self.apiURL)
             .sink(receiveCompletion: { completion in
                 if case .failure = completion {
                     XCTFail("Pet image download should succeed")

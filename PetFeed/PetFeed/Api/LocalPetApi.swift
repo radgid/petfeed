@@ -11,22 +11,17 @@ import Combine
 import CoreData
 
 /// Data Repository interfaces
-protocol PetRepository {
-    func fetch(_ request: PetRequest) -> AnyPublisher<[Pet], PetFailure>
-    func download(_ imageUrl: URL) -> AnyPublisher<Data, PetFailure>
+protocol LocalPetRepository {
     func fetchFavourites(page: Int) -> AnyPublisher<[DisplayablePet], PetFailure>
     func setPet(_ pet: Pet, image: Data?, favourite: Bool) -> AnyPublisher<Pet, PetFailure>
     func selectPet(_ pet: Pet) -> AnyPublisher<Pet, PetFailure>
+    func fetchFavouritesIds() -> [String]
 }
 
 /// Pet API
-struct PetApi: PetRepository {
-    private let sessionConfiguration: URLSessionConfiguration
+struct LocalPetApi: LocalPetRepository {
     private let managedObjectContext: NSManagedObjectContext
-    private let host: String = "https://shibe.online/api/"
-    init(sessionConfiguration: URLSessionConfiguration = .default,
-         managedObjectContext: NSManagedObjectContext) {
-        self.sessionConfiguration = sessionConfiguration
+    init(managedObjectContext: NSManagedObjectContext) {
         self.managedObjectContext = managedObjectContext
     }
     
@@ -99,42 +94,6 @@ struct PetApi: PetRepository {
         }
     }
 
-    /// Fetches Pets information
-    /// - Parameter request: Request details for fetching pets
-    /// - Returns: Pets details publisher
-    func fetch(_ request: PetRequest) -> AnyPublisher<[Pet], PetFailure> {
-        guard let url = URL(string: host + request.api() + "?" + "count=\(request.count)") else {
-                return .fail(.invalidRequest)
-        }
-
-        let session = URLSession(configuration: sessionConfiguration)
-        let urlRequest = URLRequest(url: url)
-        let publisher = session.petPublisher(for: urlRequest)
-        let favouriteIds = fetchFavouritesIds()
-        //Unwrap Array of Strings from the Json
-        let result: AnyPublisher<[String], PetFailure> = publisher.unwrap(with: JsonWrapper())
-            .eraseToAnyPublisher()
-
-        //Transform Array of string into Pet structures
-        let transformed: AnyPublisher<[Pet], PetFailure> =
-            result.flatMap { (urls) ->  AnyPublisher<[Pet], PetFailure> in
-                let pets = urls.map {Pet.init($0, isFavourite: favouriteIds.contains($0))}
-            return .future(pets)
-        }.eraseToAnyPublisher()
-
-        return transformed
-    }
-
-    /// Download image from URL
-    /// - Parameter imageUrl: URL of the Image
-    /// - Returns: Image Data Publisher
-    public func download(_ imageUrl: URL) -> AnyPublisher<Data, PetFailure> {
-        let session = URLSession(configuration: sessionConfiguration)
-        let urlRequest = URLRequest(url: imageUrl)
-        let publisher = session.petPublisher(for: urlRequest)
-
-        return publisher
-    }
 
     /// Update the Pet
     /// - Parameters:

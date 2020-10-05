@@ -17,7 +17,7 @@ import SwiftUI
 
     init(url: URL?, placeholder: Placeholder? = nil,
                 cache: ImageCache? = nil,
-                service: PetRepository) {
+                service: NetworkPetRepository) {
         loader = ImageLoader(url: url, cache: cache, service: service)
         self.placeholder = placeholder
     }

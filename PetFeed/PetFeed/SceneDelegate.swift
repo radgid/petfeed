@@ -24,11 +24,24 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         // Create the SwiftUI view and set the context as the value for the managedObjectContext environment keyPath.
         // Add `@Environment(\.managedObjectContext)` in the views that will need the context.
-        let store = Store(initialState: .init(),
-                          reducer: appReducer,
-                          environment: PetEnvironment(service: PetApi(managedObjectContext: context)))
+        let localApi = LocalPetApi(managedObjectContext: context)
+        let networkApi = NetworkPetApi(localRepository: localApi)
+        let petEnvironment = PetEnvironment(networkService: networkApi,
+                                            localService: localApi)
+        
+        let petStore = Store(initialState: .init(),
+                          reducer: petReducer,
+                          environment: petEnvironment)
+        let favPetStore = Store(initialState: .init(),
+                          reducer: favouritePetReducer,
+                          environment: petEnvironment)
+        let managePetStore = Store(initialState: .init(),
+                          reducer: managePetReducer,
+                          environment: petEnvironment)
         let contentView = MainView().environment(\.managedObjectContext, context)
-            .environmentObject(store)
+            .environmentObject(petStore)
+            .environmentObject(favPetStore)
+            .environmentObject(managePetStore)
 
         // Use a UIHostingController as window root view controller.
         if let windowScene = scene as? UIWindowScene {

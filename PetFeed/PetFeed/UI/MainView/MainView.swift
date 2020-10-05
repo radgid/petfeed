@@ -11,77 +11,73 @@ import Combine
 
 /// Main View
 struct MainView: View {
-    @EnvironmentObject var store: AppStore
-    @Environment(\.managedObjectContext) var managedObjectContext
+    @EnvironmentObject var store: PetStore
+    @EnvironmentObject var favouriteStore: FavouritePetStore
     @State private var selection = 0
     @Environment(\.imageCache) var cache: ImageCache
-    @State private var errorMessage = "" {
-        didSet {
-            isError = !errorMessage.isEmpty
-        }
-    }
-    @State private var isError = false
 
-    // MARK: - Subviews
-    var tabView: some View {
-        TabView(selection: $selection) {
-            PetsView()
-                .tabItem {
-                    VStack {
-                        Image(systemName: "list.dash")
-                        Text("All Posts")
-                    }
-            }.tag(0)
-            FavouritePetsView()
-                .onAppear {
-                    self.fetchFavourite()
-            }.tabItem {
-                VStack {
-                    Image(systemName: "heart.fill")
-                    Text("Favourites")
-                }
-            }.tag(1)
-        }.onReceive(self.store.state.$failure, perform: { failure in
-            if let failure = failure {
-                self.errorMessage = failure.localizedDescription
-            } else {
-                self.errorMessage = ""
-            }
-        })
-        .overlay(ZStack {
-            if self.isError {
-                ErrorView(errorMessage: $errorMessage.wrappedValue,
-                          isError: $isError)
+    private var errorView: some View {
+        let isError = Binding(get: {return self.store.state.failure != nil}, set: {_,_ in })
+        return ZStack {
+            if isError.wrappedValue {
+                 ErrorView(errorMessage: self.store.state.failure.unsafelyUnwrapped.localizedDescription,
+                                 isError: isError)
                     .transition(.asymmetric(insertion: .move(edge: .top),
                                             removal: .move(edge: .top)))
                     .animation(.easeInOut(duration: 0.2))
                     .zIndex(0)
             } else {
-                EmptyView()
+                 EmptyView()
             }
-        }, alignment: .top)
+        }
+    }
+    
+    private var petsView: some View {
+        PetsView()
+            .tabItem {
+                VStack {
+                    Image(systemName: "list.dash")
+                    Text("All Posts")
+                }
+        }.tag(0)
+    }
+    
+    private var favouritePetsView: some View {
+        FavouritePetsView()
+            .tabItem {
+                VStack {
+                    Image(systemName: "heart.fill")
+                    Text("Favourites")
+                }
+        }.tag(1)
+    }
+    
+    // MARK: - Subviews
+    var tabView: some View {
+        TabView(selection: $selection) {
+            petsView
+            favouritePetsView
+        }.onAppear{
+            fetch()
+        }.overlay(errorView, alignment: .top)
     }
 
     // MARK: - Body
     var body: some View {
-        tabView.onAppear {
-            self.fetch()
-            UITableView.appearance().separatorStyle = .none
-        }
+        tabView
     }
 
     // MARK: - Actions
     private func fetch() {
         store.send(.fetch(page:1))
     }
-    private func fetchFavourite() {
-        store.send(.fetchFavourite(page:1))
-    }
 }
 
 // MARK: - Preview
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        MainView().environmentObject(Settings.storeMock)
+        MainView()
+            .environmentObject(PreviewSupport.petStoreMock)
+            .environmentObject(PreviewSupport.favouritePetStoreMock)
     }
 }

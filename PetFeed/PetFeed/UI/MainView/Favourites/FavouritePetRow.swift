@@ -9,25 +9,33 @@
 import SwiftUI
 
 struct FavouritePetRow: View {
-    @State var pet: DisplayablePet
-    @EnvironmentObject var store: AppStore
+    @EnvironmentObject var petStore: PetStore
+    @EnvironmentObject var managePetStore: ManagePetStore
+    @EnvironmentObject var favPetStore: FavouritePetStore
+    
+    let petId: String
+    
+    private var pet: DisplayablePet {
+        favPetStore.state.fetchResult.filter({$0.id == petId}).first ?? DisplayablePet(id: "",
+                                                                                       image: Image.init(systemName: "hourglass"))
+    }
+    private var favImage: some View {
+        Image(systemName: "heart.fill")
+            .font(.body)
+            .foregroundColor(.accentColor)
+            .padding()
+    }
 
     var body: some View {
         HStack(alignment: .center) {
             Spacer()
-            pet.image
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(height: 180)
-                .padding()
+            pet.image.resizable()
+                .modifier(PetImageModifier())
                 .modifier(BackgroundShadow())
             Spacer()
         }.overlay(Button(action: {
             self.toggleFavourite()
-        }, label: { Image(systemName: "heart.fill")
-            .font(.body)
-            .foregroundColor(.accentColor)
-            .padding()})
+        }, label: {favImage})
             .buttonStyle(BorderlessButtonStyle()), alignment: .bottomTrailing)
             .background(Color(.systemFill))
             .cornerRadius(8)
@@ -35,15 +43,22 @@ struct FavouritePetRow: View {
 
     // MARK: - Actions
     private func toggleFavourite() {
-        store.send(.updatePet(Pet(pet.id, isFavourite: true), favourite: false))
-        store.send(.fetchFavourite(page: 1))
+        managePetStore.send(.updatePet(Pet(pet.id, isFavourite: true),
+                                       favourite: false,
+                                       petState: petStore.state))
+        favPetStore.send(.removePet(petId: pet.id))
     }
 }
 
 struct FavouritePetRowView_Previews: PreviewProvider {
     static var previews: some View {
-        FavouritePetRow(pet: DisplayablePet(id: "test",
-                                                image: PetApiMock().petImage()))
+        FavouritePetRow(petId: "https://dog1.jpg")
+            .onAppear {
+                PreviewSupport.favouritePetStoreMock.send(.fetch(page: 1))
+            }
             .environment(\.colorScheme, .dark)
+            .environmentObject(PreviewSupport.petStoreMock)
+            .environmentObject(PreviewSupport.managePetStoreMock)
+            .environmentObject(PreviewSupport.favouritePetStoreMock)
     }
 }

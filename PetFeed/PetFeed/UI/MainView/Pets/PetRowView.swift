@@ -10,15 +10,30 @@ import Foundation
 import SwiftUI
 
 struct PetRow: View {
-    @State var pet: Pet
     @Environment(\.imageCache) var cache: ImageCache
-    @EnvironmentObject var store: AppStore
-
-    private var favColor: Color {
-        return pet.isFavourite ? .accentColor : .gray
+    @EnvironmentObject var petStore: PetStore
+    @EnvironmentObject var managePetStore: ManagePetStore
+    let petId: String
+    private var pet: Pet? {
+        petStore.state.fetchResult.filter({$0.id == petId}).first
     }
-
+    
     @State var asyncImage: AsyncImage<Image>?
+    
+    private var favColor: Color {
+        return pet?.isFavourite ?? false ? .accentColor : .gray
+    }
+    
+    private var favButton: some View {
+        Button(action: {
+            self.toggleFavourite()
+        }, label: {
+            Image(systemName: "heart.fill")
+            .font(.body)
+            .foregroundColor(favColor)
+            .padding()})
+            .buttonStyle(BorderlessButtonStyle())
+    }
     
     var body: some View {
         ZStack {
@@ -29,20 +44,9 @@ struct PetRow: View {
                     .padding()
                     .modifier(BackgroundShadow())
                 Spacer()
-            }.overlay(Button(action: {
-                self.toggleFavourite()
-            }, label: { Image(systemName: "heart.fill")
-                .font(.body)
-                .foregroundColor(favColor)
-                .padding()})
-                .buttonStyle(BorderlessButtonStyle()), alignment: .bottomTrailing)
+            }.overlay( favButton , alignment: .bottomTrailing)
                 .background(Color(.systemFill))
                 .cornerRadius(8)
-        }.onReceive(self.store.state.$updatedPet) { updatedPet in
-            if let updatedPet = updatedPet,
-                updatedPet.url == self.pet.url {
-                    self.pet = updatedPet
-            }
         }.onReceive(NotificationCenter.default.publisher(for:
             Notification.Name.didDismissPetDetail)) { _ in
                 DispatchQueue.main.async {
@@ -50,27 +54,33 @@ struct PetRow: View {
                 }
         }.onAppear {
             self.asyncImage =
-                AsyncImage(url: URL(string: self.pet.url),
+                AsyncImage<Image>(url: URL(string: self.pet?.url ?? ""),
                            placeholder: Image(systemName: "hourglass"),
                            cache: self.cache,
-                           service: self.store.environment.service)
+                           service: self.petStore.environment.networkService)
         }
     }
 
     // MARK: - Actions
     private func toggleFavourite() {
+        guard let pet = pet else {return}
         let isFavourite = !pet.isFavourite
         var imageData: Data?
         if isFavourite {
             imageData = pet.uiImage(from: self.cache)?.jpegData(compressionQuality: 1.0)
         }
-        store.send(.updatePet(pet, image: imageData, favourite: !pet.isFavourite))
+        managePetStore.send(.updatePet(pet, image: imageData, favourite: !pet.isFavourite, petState: petStore.state))
     }
 }
 
 struct PetRowView_Previews: PreviewProvider {
     static var previews: some View {
-        PetRow(pet: Pet("dog1.jpg", isFavourite: false))
-            .environmentObject(Settings.storeMock)
+        PetRow(petId: PreviewSupport.petStoreMock.state.fetchResult.first?.id ?? "")
+            .environment(\.imageCache, PetApiMock().cache)
+            .environmentObject(PreviewSupport.petStoreMock)
+            .environmentObject(PreviewSupport.managePetStoreMock)
+            .onAppear {
+                PreviewSupport.petStoreMock.send(.fetch(page: 1))
+            }
     }
 }

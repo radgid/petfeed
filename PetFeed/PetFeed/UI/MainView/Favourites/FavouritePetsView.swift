@@ -9,35 +9,41 @@
 import SwiftUI
 
 struct FavouritePetsView: View {
-    @State private var pets: [DisplayablePet] = []
-    @EnvironmentObject var store: AppStore
+    @EnvironmentObject var favPetStore: FavouritePetStore
+    private var pets: [DisplayablePet]  {
+        favPetStore.state.fetchResult
+    }
     
     var body: some View {
-        
         VStack {
             if pets.isEmpty {
                 NoDataFoundView()
             } else {
                 ScrollView(.vertical) {
                     ForEach(pets, id: \.id) { pet in
-                        FavouritePetRow(pet: pet)
+                        FavouritePetRow(petId: pet.id)
                             .padding(.horizontal)
                             .padding(.bottom, 5)
                     }
                 }.animation(.default)
             }
-        }.onReceive(self.store.state.$fetchFavouriteResult) { fetchFavouriteResult in
-            self.pets = fetchFavouriteResult
+        }.onAppear {
+            self.fetchFavourite()
         }
+    }
+    
+    // MARK: - Actions
+    private func fetchFavourite() {
+        favPetStore.send(.fetch(page:1))
     }
 }
 
 struct FavouritePetsView_Previews: PreviewProvider {
     static var previews: some View {
         FavouritePetsView()
-            .environmentObject(Settings.storeMock)
+            .environmentObject(PreviewSupport.favouritePetStoreMock)
             .onAppear {
-                Settings.storeMock.send(.fetchFavourite(page: 1))
+                PreviewSupport.favouritePetStoreMock.send(.fetch(page: 1))
         }.environment(\.colorScheme, .dark)
     }
 }
