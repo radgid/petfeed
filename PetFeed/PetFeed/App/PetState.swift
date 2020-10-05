@@ -27,6 +27,7 @@ func petReducer(state: inout PetState,
     switch action {
     case let .fetch(page):
         let request = ShibeRequest(count: Constants.pageSize * page)
+        state.failure = nil
         return environment.networkService
             .fetch(request)
             .map {PetAction.setFetchResult(pets: $0)}

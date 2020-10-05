@@ -73,12 +73,20 @@ struct PetsView: View {
             } else {
                 petsView
             }
+        }.onAppear{
+            fetchIfErroredPreviously()
         }
     }
     
     // MARK: - Actions
     private func fetch() {
         petStore.send(.fetch(page:1))
+    }
+    
+    private func fetchIfErroredPreviously() {
+        if self.petStore.state.failure != nil {
+            self.fetch()
+        }
     }
 }
 
