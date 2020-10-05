@@ -22,6 +22,7 @@ struct ScrollOffsetPreferenceKey: PreferenceKey {
 }
 
 struct PetsView: View {
+    
     @Environment(\.imageCache) var cache: ImageCache
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var petStore: PetStore
@@ -29,40 +30,8 @@ struct PetsView: View {
     private var pets: [Pet] {
         petStore.state.fetchResult
     }
-    @State private var offsetY: CGFloat = 0.0
-//    private var pullToRefreshPublisher = PassthroughSubject<CGFloat, Never>()
-//    @State private var isShowPullToRefresh: Bool = false
-//    @State private var cancellable: AnyCancellable?
-//    @State private var offsetY: CGFloat = 0.0 {
-//        didSet {
-//            if offsetY > Constants.pullToRefreshOffset {
-//                isShowPullToRefresh = true
-//                cancellable = pullToRefreshPublisher.debounce(for: .seconds(1),
-//                                                    scheduler: RunLoop.current)
-//                    .removeDuplicates()
-//                    .sink { _ in
-//                        self.fetch()
-//                }
-//                pullToRefreshPublisher.send(offsetY)
-//            } else {
-//                isShowPullToRefresh = false
-//            }
-//        }
-//    }
     
-//    private var pullToRefreshView: some View {
-//        VStack {
-//            Spacer().frame(height: 20)
-//            Image(systemName: "arrowtriangle.up")
-//                .foregroundColor(Color(.systemBlue))
-//                .rotationEffect(.degrees(self.isShowPullToRefresh ? 180 : 0))
-//                .animation(Animation.easeInOut(duration:0.5))
-//            Text("Refresh Pets ...")
-//                .font(.caption)
-//                .foregroundColor(Color(.systemBlue))
-//        }.opacity(self.isShowPullToRefresh ? 1 : 0)
-//            .animation(Animation.easeIn(duration:0.3))
-//    }
+    @State private var offsetY: CGFloat = 0.0
     
     private var petsView: some View {
         let isPresented = Binding(get: {return (self.managePetStore.state.selectedPet != nil)}, set: {_,_ in })

@@ -9,10 +9,12 @@
 import SwiftUI
 
 struct ErrorView: View {
+    
     @Environment(\.presentationMode) var presentationMode
     var errorMessage: String
     @Binding var isError: Bool
     var isInNavigationLink: Bool = false
+    
     var body: some View {
             ZStack(alignment: .top) {
                 HStack(alignment: .top, spacing: 30) {

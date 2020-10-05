@@ -15,6 +15,7 @@ public protocol ImageCache {
 
 /// Image caching
 public struct TemporaryImageCache: ImageCache {
+    
     private let cache = NSCache<NSURL, UIImage>()
 
     public subscript(_ key: URL) -> UIImage? {

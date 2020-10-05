@@ -11,6 +11,7 @@ import Combine
 
 /// Main View
 struct MainView: View {
+    
     @EnvironmentObject var store: PetStore
     @EnvironmentObject var favouriteStore: FavouritePetStore
     @State private var selection = 0

@@ -12,6 +12,7 @@ import Combine
 
 /// Image loader responsible for loading the Image either from Cache or Downloading from the internet
 class ImageLoader: ObservableObject {
+    
     private static let imageProcessingQueue = DispatchQueue(label: "ImageProcessing")
 
     private var cache: ImageCache?

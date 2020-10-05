@@ -20,7 +20,9 @@ protocol LocalPetRepository {
 
 /// Pet API
 struct LocalPetApi: LocalPetRepository {
+    
     private let managedObjectContext: NSManagedObjectContext
+    
     init(managedObjectContext: NSManagedObjectContext) {
         self.managedObjectContext = managedObjectContext
     }

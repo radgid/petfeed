@@ -9,7 +9,9 @@
 import SwiftUI
 
 struct FavouritePetsView: View {
+    
     @EnvironmentObject var favPetStore: FavouritePetStore
+    
     private var pets: [DisplayablePet]  {
         favPetStore.state.fetchResult
     }

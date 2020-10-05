@@ -8,7 +8,6 @@
 
 import Foundation
 import Combine
-import CoreData
 
 /// Data Repository interfaces
 protocol NetworkPetRepository {
@@ -18,6 +17,7 @@ protocol NetworkPetRepository {
 
 /// Pet API
 struct NetworkPetApi: NetworkPetRepository {
+    
     private let sessionConfiguration: URLSessionConfiguration
     private let host: String = "https://shibe.online/api/"
     private let localRepository: LocalPetRepository

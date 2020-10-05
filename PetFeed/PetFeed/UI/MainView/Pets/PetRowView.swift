@@ -10,10 +10,12 @@ import Foundation
 import SwiftUI
 
 struct PetRow: View {
+    
     @Environment(\.imageCache) var cache: ImageCache
     @EnvironmentObject var petStore: PetStore
     @EnvironmentObject var managePetStore: ManagePetStore
     let petId: String
+    
     private var pet: Pet? {
         petStore.state.fetchResult.filter({$0.id == petId}).first
     }

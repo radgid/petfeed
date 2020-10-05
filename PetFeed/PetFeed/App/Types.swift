@@ -9,11 +9,6 @@
 import Foundation
 import Combine
 
-struct PetEnvironment {
-    let networkService: NetworkPetRepository
-    let localService: LocalPetRepository
-}
-
 typealias PetStore = Store<PetState, PetAction, PetEnvironment>
 typealias FavouritePetStore = Store<FavouritePetState, FavouritePetAction, PetEnvironment>
 typealias ManagePetStore = Store<ManagePetState, ManagePetAction, PetEnvironment>

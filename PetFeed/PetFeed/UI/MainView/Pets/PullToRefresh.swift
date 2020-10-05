@@ -10,6 +10,7 @@ import SwiftUI
 import Combine
 
 struct PullToRefresh: View {
+    
     init(triggerOffset: Binding<CGFloat>, _ completion: @escaping (() -> Void) ) {
         self.completion = completion
         self._triggerOffset = triggerOffset

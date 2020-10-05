@@ -9,9 +9,9 @@
 import Foundation
 import Combine
 
-final class FavouritePetState: ObservableObject {
-    @Published var fetchResult: [DisplayablePet] = []
-    @Published var failure: PetFailure?
+final class FavouritePetState {
+    var fetchResult: [DisplayablePet] = []
+    var failure: PetFailure?
 }
 /// App Actions
 enum FavouritePetAction {

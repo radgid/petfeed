@@ -10,9 +10,9 @@ import Foundation
 import Combine
 
 /// Global AppState
-final class ManagePetState: ObservableObject {
-    @Published var updatedPet: Pet?
-    @Published var selectedPet: Pet?
+final class ManagePetState {
+    var updatedPet: Pet?
+    var selectedPet: Pet?
 }
 
 /// App Actions

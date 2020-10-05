@@ -9,10 +9,12 @@
 import SwiftUI
 
 struct PetImageView: View {
+    
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var petStore: PetStore
     @EnvironmentObject var managePetStore: ManagePetStore
     @Environment(\.imageCache) var cache: ImageCache
+    
     private var petUrl: String {
         managePetStore.state.selectedPet?.url ?? ""
     }
@@ -61,7 +63,7 @@ struct PetImageView: View {
         if isFavourite {
             imageData = pet.uiImage(from: self.cache)?.jpegData(compressionQuality: 1.0)
         }
-        managePetStore.send(.updatePet(pet, image: imageData, favourite: !pet.isFavourite, petState: petStore.state))
+        managePetStore.send(.updatePet(pet, image: imageData, favourite: isFavourite, petState: petStore.state))
     }
 }
 
